@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Notas y borradores locales (no subir casos reales nunca)
+borradores/
+casos-locales/
+*.local.md
+*.draft.md
+
+# Archivos del entorno de desarrollo del PDF
+__pycache__/
+*.pyc
+.venv/
+venv/

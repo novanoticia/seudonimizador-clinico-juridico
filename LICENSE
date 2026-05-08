@@ -1,0 +1,57 @@
+seudonimizador-clinico-juridico — Skill de seudonimización para casos clínicos y jurídicos
+Copyright (c) 2026 Pablo
+Web: mindandhealth.org · github.com/novanoticia
+
+Este trabajo se publica bajo la licencia
+Creative Commons Atribución 4.0 Internacional (CC BY 4.0).
+
+Puede consultarse el texto completo de la licencia en:
+https://creativecommons.org/licenses/by/4.0/deed.es
+
+Resumen de la licencia:
+
+  Usted es libre de:
+    - Compartir: copiar y redistribuir el material en cualquier medio o formato.
+    - Adaptar: remezclar, transformar y construir a partir del material para
+      cualquier propósito, incluso comercialmente.
+
+  El licenciante no puede revocar estas libertades en tanto usted siga los
+  términos de la licencia.
+
+  Bajo los siguientes términos:
+    - Atribución: debe dar crédito de manera adecuada, brindar un enlace
+      a la licencia, e indicar si se han realizado cambios. Puede hacerlo
+      en cualquier forma razonable, pero no de forma tal que sugiera que
+      tiene el apoyo del licenciante o lo recibe por el uso que hace.
+
+  No hay restricciones adicionales: no puede aplicar términos legales
+  o medidas tecnológicas que restrinjan legalmente a otros hacer cualquier
+  uso permitido por la licencia.
+
+---
+
+Atribución sugerida:
+
+  "Pablo (mindandhealth.org · github.com/novanoticia),
+   'seudonimizador-clinico-juridico',
+   licenciado bajo CC BY 4.0"
+
+---
+
+Aviso adicional:
+
+  El skill ha sido diseñado con asistencia de IA (Claude, Anthropic).
+  Las decisiones de diseño, la dirección y la responsabilidad del
+  contenido corresponden al autor.
+
+  Esta herramienta produce seudonimización con generalización dirigida,
+  no anonimización en el sentido del Considerando 26 del RGPD. No
+  sustituye los procedimientos formales de anonimización exigibles
+  por RGPD/LOPDGDD para publicación científica, peritaje formal,
+  expediente oficial o cesión a terceros.
+
+  No es un producto sanitario en el sentido del Reglamento (UE)
+  2017/745 ni una herramienta de asesoramiento jurídico. Su uso
+  debe entenderse como apoyo metodológico para uso secundario
+  (estudio, supervisión, formación), pendiente de validación con
+  casos reales por profesionales habilitados.
