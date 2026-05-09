@@ -74,43 +74,76 @@ Detalle completo en [`SKILL.md`](./SKILL.md), lógica de transformación en [`fl
 
 ---
 
-## Modo recomendado de uso
+## Instalación
 
-El skill está diseñado para minimizar la huella de los datos sensibles en la sesión y en la cuenta del usuario. Sigue este orden:
+Hay tres formas de usar el skill, según dónde quieras invocarlo. La primera es la más sencilla.
 
-1. **Activa Conversación Temporal** (Incognito) en la app de Claude para macOS antes de pegar nada. La Conversación Temporal no usa memoria, no se guarda en el historial visible y no entra en la búsqueda de chats pasados. Es la capa mínima razonable.
-2. **Limpia el archivo en origen** si vas a adjuntar PDF/DOCX: revisa metadatos (autoría incrustada, marcas de agua, propiedades del documento) con herramientas externas (`exiftool`, propiedades del documento) antes de subirlo.
-3. **Invoca el skill** con `/seudonimizar A`, `B`, `C` o `audit` seguido del caso o adjuntando archivo.
-4. **Verifica el mapa de tokens y la auditoría de riesgo residual** antes de aceptar el resultado. Si detectas fuga, pide corrección concreta y deja que el skill regenere manteniendo coherencia.
-5. **Archiva o destruye el mapa rol→token aparte del texto transformado.** Es la "información adicional" que el RGPD pide custodiar separadamente para que la seudonimización sea efectiva (Art. 4.5).
+### Opción 1 — Claude.ai (web, app de escritorio o móvil)
+
+Es la vía recomendada y más rápida.
+
+1. Descarga el paquete de instalación: **[`dist/seudonimizador-clinico-juridico.zip`](./dist/seudonimizador-clinico-juridico.zip)**.
+2. En Claude.ai, ve a **Ajustes → Capacidades → Skills**.
+3. Asegúrate de que **Code execution and file creation** está activado.
+4. Pulsa **Subir skill** (o *Upload skill*).
+5. Selecciona el archivo `.zip` descargado.
+6. El skill aparece en tu lista de Skills, activado por defecto.
+
+A partir de ese momento, el skill se invoca con `/seudonimizar` seguido del modo (`A`, `B`, `C`, `audit`) en cualquier conversación. Recomendado: hazlo en una **Conversación Temporal** para minimizar la huella de los datos sensibles.
+
+> El archivo equivalente con extensión `.skill` (**[`dist/seudonimizador-clinico-juridico.skill`](./dist/seudonimizador-clinico-juridico.skill)**) es el mismo paquete con extensión alternativa, presente para compatibilidad con marketplaces de terceros (Agensi, etc.). Para Claude.ai oficial hay que renombrarlo a `.zip` antes de subirlo, o simplemente usar directamente el `.zip`.
+
+### Opción 2 — Claude Code (línea de comandos)
+
+Para usar el skill desde Claude Code en tu Mac:
+
+```bash
+# Skills personales (disponibles en cualquier proyecto)
+mkdir -p ~/.claude/skills
+cd ~/.claude/skills
+unzip /ruta/a/seudonimizador-clinico-juridico.zip
+
+# O bien, skills del proyecto actual
+mkdir -p .claude/skills
+cd .claude/skills
+unzip /ruta/a/seudonimizador-clinico-juridico.zip
+```
+
+Tras descomprimir tendrás `~/.claude/skills/seudonimizador-clinico-juridico/` con todos los archivos. Claude Code lo detecta automáticamente; se invoca igual que en la app: `/seudonimizar [modo]`.
+
+### Opción 3 — Otras inteligencias artificiales
+
+El skill es texto Markdown. Cualquier asistente conversacional capaz de seguir instrucciones extensas puede aplicarlo, pegándolo como prompt inicial.
+
+1. Abre una conversación efímera o temporal en la IA correspondiente:
+   - **ChatGPT**: *Temporary Chat*.
+   - **Mistral LeChat**: conversación efímera.
+   - **Google Gemini**: chat temporal cuando esté disponible.
+   - **LLM local** (Ollama, LM Studio): cualquier sesión nueva.
+2. Pega como primer mensaje el contenido concatenado de:
+   - `SKILL.md`
+   - `flujo.md`
+   - `plantilla-tokens.md`
+3. Añade al final del bloque: *«Sigue este protocolo. Espera mi caso.»*
+4. La IA debería confirmar que el protocolo está cargado. A partir de ahí, invoca con `/seudonimizar [modo]` o describe el modo en lenguaje natural si la IA no soporta comandos de barra.
+
+> Avisos por plataforma:
+> - **Meta AI en WhatsApp**: no recomendado para casos sensibles por la integración con la cuenta del usuario y la falta de un modo temporal verificable.
+> - **Modelos pequeños** (≤ 7B parámetros): tienden a omitir identificadores indirectos. Prefiere modelos de razonamiento de tamaño medio o grande.
+> - **El modo `audit`** puede aplicarse a textos producidos por cualquier IA para revisar su solidez con un segundo modelo distinto del primero.
+
+### Modo recomendado de uso (cualquier opción)
+
+Independientemente de cómo lo instales:
+
+1. **Activa Conversación Temporal o equivalente** antes de pegar nada sensible.
+2. **Limpia los archivos en origen** si vas a adjuntar PDF/DOCX (metadatos, marcas de agua, propiedades del documento) con `exiftool` o equivalente.
+3. **Invoca** con `/seudonimizar A`, `B`, `C` o `audit`.
+4. **Verifica el mapa de tokens y la auditoría de riesgo residual** antes de aceptar el resultado.
+5. **Archiva o destruye el mapa rol-token aparte del texto transformado.** Es la "información adicional" que el RGPD pide custodiar separadamente para que la seudonimización sea efectiva (Art. 4.5).
 6. **Cierra la conversación** una vez tengas el resultado en disco local.
 
-> Aviso: la Conversación Temporal es una capa de privacidad de interfaz, no una bóveda criptográfica. Reduce la exposición pero no la elimina. Para usos que requieran cumplimiento RGPD pleno (publicación, peritaje, expediente), considera procesamiento local (LLM en máquina propia) y revisión humana experta como capas adicionales.
-
----
-
-## Uso en otras IAs
-
-El skill es un conjunto de archivos Markdown. Cualquier asistente conversacional capaz de leer instrucciones extensas puede aplicarlo, con matices según la plataforma.
-
-- **Claude (app, web, API)**: uso nativo. Coloca el directorio en la carpeta de skills personales y se activa con `/seudonimizar`. Recomendado: Opus 4.7 por capacidad de razonamiento sostenido. Funciona también en Sonnet con resultados algo más mecánicos en el modo `C`.
-- **ChatGPT (Temporary Chat)**: usa el equivalente "chat temporal". Pega `SKILL.md` + `flujo.md` + `plantilla-tokens.md` (concatenados) como primer mensaje, indicando: "Sigue este protocolo. Espera mi caso." Activa el chat temporal antes de pegar nada.
-- **Mistral LeChat**: equivalente. Pegar el bloque del skill como prompt inicial. Modelos grandes (Large) recomendados.
-- **Google Gemini**: usa el modo de chat temporal cuando esté disponible. Pega el skill y procede.
-- **Meta AI en WhatsApp**: no recomendado para casos sensibles por la integración con la cuenta del usuario y la falta de un modo temporal verificable.
-- **LLM local (Ollama, llama.cpp, LM Studio, etc.)**: opción más segura para casos con datos especialmente delicados. Requiere modelo de razonamiento suficientemente grande (≥ 30B parámetros para resultados aceptables en modos B y C). El procesamiento local elimina la transmisión a terceros, que es la principal preocupación RGPD.
-
-En todos los casos, la salida hay que auditarla. Cuanto más pequeño o menos capaz sea el modelo, más probable es que omita identificadores indirectos. El modo `audit` puede aplicarse a textos producidos por cualquier IA para revisar su solidez.
-
----
-
-## Cómo usarlo (instalación)
-
-1. Clona o descarga este repositorio.
-2. Coloca el directorio en la carpeta de skills personales según la documentación oficial de Anthropic.
-3. Invoca con `/seudonimizar [modo]` seguido del caso, en una **Conversación Temporal**.
-
-Plantilla orientativa de entrada en [`plantilla-entrada.md`](./plantilla-entrada.md). Buenas prácticas detalladas en la guía PDF.
+> La Conversación Temporal es una capa de privacidad de interfaz, no una bóveda criptográfica. Reduce la exposición pero no la elimina. Para usos que requieran cumplimiento RGPD pleno (publicación, peritaje, expediente), considera procesamiento local (LLM en máquina propia) y revisión humana experta como capas adicionales.
 
 ---
 
@@ -118,18 +151,32 @@ Plantilla orientativa de entrada en [`plantilla-entrada.md`](./plantilla-entrada
 
 ```
 seudonimizador-clinico-juridico/
-├── SKILL.md               # Descriptor del skill: trigger y resumen
-├── flujo.md               # Flujo operativo de seis pasos
-├── plantilla-entrada.md   # Formato de entrada para el usuario
-├── plantilla-tokens.md    # Catálogo de roles y convenciones
-├── auditoria.md           # Protocolo del modo audit
-├── LICENSE                # CC BY 4.0
-├── README.md              # Este archivo
-├── CHANGELOG.md           # Historial de versiones
+├── SKILL.md                 # Descriptor del skill: trigger y resumen
+├── flujo.md                 # Flujo operativo de seis pasos
+├── plantilla-entrada.md     # Formato de entrada para el usuario
+├── plantilla-tokens.md      # Catálogo de roles y convenciones
+├── auditoria.md             # Protocolo del modo audit
+├── LICENSE                  # CC BY 4.0
+├── README.md                # Este archivo
+├── CHANGELOG.md             # Historial de versiones
 ├── .gitignore
+├── dist/
+│   ├── seudonimizador-clinico-juridico.zip    # Paquete de instalación para Claude.ai
+│   └── seudonimizador-clinico-juridico.skill  # Mismo paquete, extensión alternativa
 └── docs/
     └── seudonimizador-clinico-juridico-guia-profesional-v1.0.pdf
 ```
+
+El paquete de `dist/` es ligero (≈ 17 KB): contiene solo los archivos que el skill necesita en tiempo de ejecución (SKILL.md, flujo.md, plantilla-entrada.md, plantilla-tokens.md, auditoria.md) más LICENSE.
+
+---
+
+## Encadenamiento con otros skills
+
+Está pensado para encadenarse con los skills de formulación clínica y jurídica del mismo autor:
+
+- Caso clínico crudo → `/seudonimizar A` → `/cie11-formulacion-clinica` o `/dsm-formulacion-clinica`.
+- Caso jurídico crudo → `/seudonimizar B` → `/codigo-civil-formulacion-juridica`.
 
 ---
 

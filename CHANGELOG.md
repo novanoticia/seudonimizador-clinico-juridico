@@ -14,6 +14,8 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y s
 - Plantilla de entrada (`plantilla-entrada.md`) con puertas de entrada y comprobación rápida previa al envío.
 - Protocolo del modo `audit` (`auditoria.md`) con seis comprobaciones, rúbrica de riesgo residual y criterios de escalada a revisión humana experta.
 - Guía profesional en PDF (`docs/`) con filosofía de diseño, marco ético-legal, arquitectura del flujo, modo recomendado de uso, uso en otras IAs, limitaciones conocidas y sesgos identificados.
+- Paquete de instalación en `dist/`: `seudonimizador-clinico-juridico.zip` (≈ 17 KB) listo para subir en Claude.ai (Ajustes → Capacidades → Skills) y `seudonimizador-clinico-juridico.skill` con el mismo contenido y extensión alternativa.
+- Sección de instalación en el README con tres rutas: Claude.ai (zip), Claude Code (`~/.claude/skills/`), otras IAs (pegado como prompt).
 - Licencia CC BY 4.0.
 
 ### Probado
