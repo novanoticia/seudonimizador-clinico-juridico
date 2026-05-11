@@ -6,7 +6,11 @@ Flujo operativo de seis pasos. Aplica para los modos `A`, `B` y `C`. Para el mod
 
 Aplican en todos los modos y en todos los pasos.
 
-1. **No inventar.** Si un dato no está en el original, no se rellena. Se marca como `[NO_CONSTA]` o se traslada al apartado de decisiones por defecto.
+1. **No inventar — prohibición estricta.** No introduzcas ningún dato, síntoma, hecho, fecha, cuantía, argumento, diagnóstico, antecedente, circunstancia procesal ni inferencia clínica o jurídica que no figure literalmente en el texto original. Esta prohibición opera por encima de cualquier otra regla del flujo: si una transformación (desplazamiento temporal, generalización, parafraseo) introdujera información nueva, abandona la transformación antes que inventar.
+   - Si necesitas eliminar un dato sin sustituirlo (porque identifica y no admite generalización), usa el marcador `[DATO_ELIMINADO]`.
+   - Si un dato aparece en el original pero no se entiende o es ambiguo, usa `[NO_CONSTA]` o trasládalo al apartado de decisiones por defecto.
+   - Ante la duda entre rellenar y omitir: **omite**. Una laguna explícita es mejor que un dato fabricado.
+   - El parafraseo (paso 3.4 y paso 4) solo puede *reducir* especificidad. Nunca puede añadir matices, contextualizar con información no presente, ni "redondear" la narrativa.
 2. **No suavizar.** Si un hecho es duro (autolesión, violencia, gravedad procesal), se mantiene literal en su contenido aunque se transformen sus identificadores. Suavizar sería adulterar el caso.
 3. **Consistencia absoluta.** El mismo sujeto, lugar o entidad recibe siempre el mismo token. El mismo desplazamiento temporal se aplica a todas las fechas.
 4. **Separabilidad del mapa.** El mapa rol→token se entrega como bloque separado, encabezado `## MAPA — archivar o destruir aparte del texto`. Es la "información adicional" que el RGPD pide custodiar separadamente.
@@ -126,6 +130,12 @@ Devuelve la respuesta con esta estructura:
   - ...
 - Propuesta de generalización adicional (si procede):
   - ...
+
+## CONTROL DE FIDELIDAD
+
+- ¿Algún elemento del texto seudonimizado no tiene correspondencia en el original? [sí / no]
+- Si sí, listar: [elemento — motivo de la divergencia — corrección propuesta]
+- Marcadores usados: [recuento de `[DATO_ELIMINADO]` y `[NO_CONSTA]`, si los hay]
 
 ## DECISIONES POR DEFECTO
 

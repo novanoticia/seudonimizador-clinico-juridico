@@ -1,6 +1,6 @@
 ---
 name: seudonimizador-clinico-juridico
-description: Seudonimiza casos clínicos (psicología/psiquiatría) y jurídicos para estudio, supervisión o formación, conservando utilidad analítica (cronología exacta, secuencia procesal, evolución sintomatológica, lógica argumental) y eliminando identificadores directos e indirectos. **Trigger principal y obligatorio: "/seudonimizar"**. Activa este skill SIEMPRE que el usuario escriba ese comando exacto, en cualquier contexto. Soporta modos: A (clínico), B (jurídico), C (generalización extrema, casos mediáticos o de muy baja prevalencia), audit (auditar texto ya transformado). Activa también el skill cuando el usuario pida explícitamente "seudonimiza este caso", "anonimiza este caso para estudio", "limpia este caso de identificadores", "transforma este caso para supervisión" o expresiones equivalentes. NO se activa para casos ficticios sin valor formativo, ni sustituye los procedimientos formales de anonimización exigidos por RGPD/LOPDGDD para publicación científica, peritaje formal o expediente oficial.
+description: "Seudonimiza casos clínicos (psicología/psiquiatría) y jurídicos para estudio, supervisión o formación, conservando utilidad analítica (cronología exacta, secuencia procesal, evolución sintomatológica, lógica argumental) y eliminando identificadores directos e indirectos. **Trigger principal y obligatorio: \"/seudonimizar\"**. Activa este skill SIEMPRE que el usuario escriba ese comando exacto, en cualquier contexto. Soporta modos: A (clínico), B (jurídico), C (generalización extrema, casos mediáticos o de muy baja prevalencia), audit (auditar texto ya transformado). Activa también el skill cuando el usuario pida explícitamente \"seudonimiza este caso\", \"anonimiza este caso para estudio\", \"limpia este caso de identificadores\", \"transforma este caso para supervisión\" o expresiones equivalentes. NO se activa para casos ficticios sin valor formativo, ni sustituye los procedimientos formales de anonimización exigidos por RGPD/LOPDGDD para publicación científica, peritaje formal o expediente oficial."
 ---
 
 # Seudonimizador Clínico-Jurídico
@@ -16,7 +16,7 @@ El uso real de un LLM con material clínico o jurídico se mueve siempre entre d
 
 Este skill ocupa el medio razonado: conserva intervalos temporales, secuencias procesales, sintomatología, hallazgos exploratorios y dinámicas relevantes; elimina identificadores directos y reduce identificadores indirectos hasta un nivel auditado.
 
-No transcribe nombres, no inventa hechos, no rellena lagunas. Cuando algo no está en el original, se marca como pendiente.
+No transcribe nombres, no inventa hechos, no rellena lagunas. La fidelidad al original es regla dura: ningún dato, síntoma, hecho, cuantía o inferencia que no figure en el texto de entrada puede aparecer en la salida. Cuando un dato debe eliminarse sin sustituirlo, se marca como `[DATO_ELIMINADO]`; cuando un dato del original es ambiguo, se marca como `[NO_CONSTA]` o se traslada a decisiones por defecto. Ante la duda, omitir prevalece sobre rellenar.
 
 ## Marco normativo (lectura obligada antes de usarlo)
 
@@ -36,7 +36,8 @@ Recibe un caso real ya manejado por un profesional habilitado y devuelve, en est
 1. Confirmación con semilla de desplazamiento temporal y mapa rol→token.
 2. Texto seudonimizado del caso, en bloque separable.
 3. Auditoría de riesgo residual (bajo / medio / alto) con justificación.
-4. Decisiones por defecto (asunciones tomadas por falta de contexto).
+4. Control de fidelidad: comprobación explícita de que ningún elemento de la salida carece de correspondencia en el original.
+5. Decisiones por defecto (asunciones tomadas por falta de contexto).
 
 ## Modos de invocación
 
@@ -83,5 +84,7 @@ Si el usuario no especifica modo, se pide aclaración. No hay modo por defecto: 
 - Pendiente de validación con casos reales de distinto tipo. Iterar tras pruebas.
 
 ## Versión
+
+v1.1 — refuerzo de la regla de no-invención tras detectarse alucinaciones en uso real (adiciones de matiz no presentes en el original durante el parafraseo). La regla 1 transversal de `flujo.md` se ha reescrito como prohibición estricta y prioritaria sobre cualquier otra transformación. Se introduce el marcador `[DATO_ELIMINADO]` y un bloque obligatorio de **Control de fidelidad** en la salida del paso 5.
 
 v1.0 — descriptor inicial con cuatro modos (A clínico, B jurídico, C generalización extrema, audit), flujo de seis pasos, plantilla de tokens y protocolo de auditoría. Probado únicamente con casos sintéticos. Iterar tras uso real.

@@ -17,8 +17,11 @@ Icon
 # Notas y borradores locales (no subir casos reales nunca)
 borradores/
 casos-locales/
+casos-reales/
+casos-cliente/
 *.local.md
 *.draft.md
+*.caso-real.md
 
 # Archivos del entorno de desarrollo del PDF
 __pycache__/

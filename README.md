@@ -1,101 +1,58 @@
-# seudonimizador-clinico-juridico
+# Seudonimizador Clínico-Jurídico
 
-Skill para asistentes conversacionales (Claude, Anthropic) de **seudonimización con generalización dirigida** de casos clínicos (psicología/psiquiatría) y jurídicos para uso secundario: estudio, supervisión, formación o redacción didáctica. Conserva utilidad analítica (cronología exacta, secuencia procesal, evolución sintomatológica, lógica argumental) eliminando identificadores directos y reduciendo identificadores indirectos. **No anonimiza en sentido jurídico fuerte.**
+Skill de transformación de casos reales clínicos y jurídicos en versiones aptas para uso secundario (estudio, supervisión, formación, redacción didáctica), conservando utilidad analítica y eliminando identificadores directos e indirectos.
 
-> **Autor:** Pablo · [mindandhealth.org](https://mindandhealth.org) · [github.com/novanoticia](https://github.com/novanoticia)
-> **Licencia:** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.es)
-> **Versión actual:** v1.0
+**Versión actual: v1.1** ([changelog](CHANGELOG.md))
 
----
-
-## Antes de empezar: lee la guía
-
-Antes de probar el skill, conviene leer la guía profesional. Explica filosofía de diseño, marco ético-legal (RGPD, LOPDGDD, MDR 2017/745, copyright), arquitectura del flujo, modos de invocación, modo recomendado de uso, uso en otras IAs, limitaciones conocidas y sesgos identificados:
-
-📄 **[Guía para profesionales (PDF, v1.0)](./docs/seudonimizador-clinico-juridico-guia-profesional-v1.0.pdf)**
-
-Es un documento pensado para leer una vez antes del primer uso. Sin esa lectura, hay riesgo de tratar la herramienta como caja negra, lo que en este caso significa creer que produce anonimización conforme cuando solo produce seudonimización razonada.
-
----
-
-## Estado del proyecto
-
-Versión **1.0**. Probado únicamente con casos sintéticos (clínico depresivo con consumo, jurídico civil de responsabilidad contractual, jurídico penal con elementos mediáticos para someter el modo C a tensión).
-
-> **No validado con casos reales por profesionales habilitados.** Pendiente de prueba en supervisión y formación reales antes de cualquier uso institucional.
-
----
-
-## Audiencia esperada
-
-Profesionales habilitados en psiquiatría, psicología clínica, derecho o disciplinas afines que quieran un andamio metodológico para preparar casos reales destinados a uso secundario interno (supervisión, formación, redacción didáctica).
-
-**No es para autodescripción del propio usuario, no es para uso por personas no cualificadas profesionalmente, no sustituye revisión humana experta, no es producto sanitario en el sentido del MDR 2017/745, no es asesoramiento jurídico.**
-
----
-
-## Sobre el autor
-
-Desarrollado por **Pablo** ([mindandhealth.org](https://mindandhealth.org), GitHub: [novanoticia](https://github.com/novanoticia)) — **no profesional sanitario ni jurista en ejercicio**. Es un proyecto personal con interés autodidacta en marcos clínicos contextuales, razonamiento clínico y jurídico, y crítica de la mediación algorítmica de la información sensible.
-
-El skill se ha construido con **asistencia de Claude (Anthropic)**. Las decisiones de diseño, la dirección y la responsabilidad del contenido corresponden al autor humano. Requiere validación profesional antes de cualquier uso real.
-
----
+> **No anonimiza en sentido fuerte.** Produce textos seudonimizados con generalización dirigida, marcando explícitamente el riesgo residual. No sustituye los procedimientos formales de anonimización exigidos por el RGPD/LOPDGDD para publicación científica, peritaje formal, expediente oficial ni cesión a terceros.
 
 ## Qué hace
 
 Recibe un caso real ya manejado por un profesional habilitado y devuelve, en este orden:
 
-1. Apertura con semilla de desplazamiento temporal y eventuales preguntas críticas previas.
-2. Mapa rol→token (separable, pensado para archivar o destruir aparte).
-3. Texto seudonimizado con cronología consistente.
-4. Auditoría de riesgo residual (bajo / medio / alto) con justificación.
-5. Decisiones por defecto y lagunas.
+1. Apertura con semilla de desplazamiento temporal y mapa rol → token.
+2. Texto seudonimizado del caso, en bloque separable.
+3. Auditoría de riesgo residual (bajo / medio / alto) con justificación.
+4. **Control de fidelidad**: comprobación explícita de que ningún elemento de la salida carece de correspondencia en el original (nuevo en v1.1).
+5. Decisiones por defecto (asunciones tomadas por falta de contexto).
 
-**Modos disponibles:**
+## Modos
 
-- `A` — caso clínico (psicología/psiquiatría).
-- `B` — caso jurídico (civil, penal, laboral, contencioso, mercantil).
-- `C` — generalización extrema, para casos mediáticos, figuras públicas o de muy baja prevalencia.
-- `audit` — auditoría de un texto ya seudonimizado, con rúbrica de riesgo y propuesta de generalización adicional.
+Sintaxis: `/seudonimizar [modo]` seguido del caso o adjuntando archivo.
 
-Detalle completo en [`SKILL.md`](./SKILL.md), lógica de transformación en [`flujo.md`](./flujo.md), formato de entrada en [`plantilla-entrada.md`](./plantilla-entrada.md), catálogo de tokens en [`plantilla-tokens.md`](./plantilla-tokens.md), protocolo del modo `audit` en [`auditoria.md`](./auditoria.md), y discusión exhaustiva en la guía PDF.
+- **`A`** (clínico). Psicología o psiquiatría. Conserva sintomatología, exploración, hipótesis diagnósticas, formulación, dinámica transferencial, intervenciones, respuesta.
+- **`B`** (jurídico). Civil, penal, laboral o administrativo. Conserva hechos probados, fundamentos de derecho, plazos procesales (desplazados con semilla), tipos delictivos o civiles, lógica argumentativa.
+- **`C`** (generalización extrema). Casos mediáticos, figuras públicas, enfermedades raras o combinaciones de muy baja prevalencia donde A o B dejarían riesgo residual alto.
+- **`audit`**. Audita un texto ya seudonimizado (por este skill o por otra vía). Devuelve fugas detectadas, riesgo estimado y propuesta de generalización adicional. Desde v1.1 audita también la **fidelidad al original** si se aporta el texto original junto al seudonimizado.
 
----
+Si no se indica modo, el skill pregunta. No hay modo por defecto: confundir A y B degrada el resultado.
 
-## Qué NO hace
+## Novedades v1.1 — refuerzo anti-alucinación
 
-- No produce **anonimización** en el sentido del Considerando 26 RGPD. Lo que entrega es **seudonimización con generalización dirigida** (Art. 4.5 RGPD).
-- No sustituye los procedimientos formales de anonimización exigibles para publicación científica, peritaje formal, expediente oficial o cesión a terceros.
-- No emite juicio clínico ni jurídico sobre el caso. Solo lo transforma.
-- No detecta identificadores en imágenes, audio, vídeo, ni metadatos no visibles de archivos. Solo texto.
-- No es un producto sanitario en el sentido del Reglamento (UE) 2017/745.
-- No es asesoramiento jurídico.
+Tras pruebas en uso real, el skill incorporaba ocasionalmente matices o inferencias no presentes en el original durante el parafraseo. Una alucinación silenciosa en este contexto es más grave que un identificador residual: contamina el razonamiento clínico o jurídico sin dejar rastro detectable. La v1.1 endurece tres puntos:
 
----
+- **Regla 1 transversal reescrita como prohibición estricta y prioritaria** sobre cualquier otra transformación. Si una generalización o parafraseo introdujera información nueva, se abandona la transformación antes que inventar.
+- **Nuevo marcador `[DATO_ELIMINADO]`** para eliminar un dato sin sustituirlo. Convive con `[NO_CONSTA]`, que se reserva para datos del original cuya lectura es ambigua.
+- **Bloque "Control de fidelidad"** obligatorio en la salida y **comprobación 7** en el modo `audit`.
+
+Detalle completo en [CHANGELOG.md](CHANGELOG.md).
 
 ## Instalación
 
-Hay tres formas de usar el skill, según dónde quieras invocarlo. La primera es la más sencilla.
+### Opción 1 — Claude.ai (recomendada para uso conversacional)
 
-### Opción 1 — Claude.ai (web, app de escritorio o móvil)
-
-Es la vía recomendada y más rápida.
-
-1. Descarga el paquete de instalación: **[`dist/seudonimizador-clinico-juridico.zip`](./dist/seudonimizador-clinico-juridico.zip)**.
+1. Descarga **[`dist/seudonimizador-clinico-juridico.zip`](dist/seudonimizador-clinico-juridico.zip)**.
 2. En Claude.ai, ve a **Ajustes → Capacidades → Skills**.
 3. Asegúrate de que **Code execution and file creation** está activado.
 4. Pulsa **Subir skill** (o *Upload skill*).
 5. Selecciona el archivo `.zip` descargado.
 6. El skill aparece en tu lista de Skills, activado por defecto.
 
-A partir de ese momento, el skill se invoca con `/seudonimizar` seguido del modo (`A`, `B`, `C`, `audit`) en cualquier conversación. Recomendado: hazlo en una **Conversación Temporal** para minimizar la huella de los datos sensibles.
+A partir de ese momento, el skill se invoca con `/seudonimizar` seguido del modo (`A`, `B`, `C`, `audit`) en cualquier conversación. **Recomendado**: hazlo en una **Conversación Temporal** para minimizar la huella de los datos sensibles.
 
-> El archivo equivalente con extensión `.skill` (**[`dist/seudonimizador-clinico-juridico.skill`](./dist/seudonimizador-clinico-juridico.skill)**) es el mismo paquete con extensión alternativa, presente para compatibilidad con marketplaces de terceros (Agensi, etc.). Para Claude.ai oficial hay que renombrarlo a `.zip` antes de subirlo, o simplemente usar directamente el `.zip`.
+> El archivo equivalente **[`dist/seudonimizador-clinico-juridico.skill`](dist/seudonimizador-clinico-juridico.skill)** es el mismo paquete con extensión alternativa, presente para compatibilidad con marketplaces de terceros. Para Claude.ai usa directamente el `.zip`.
 
 ### Opción 2 — Claude Code (línea de comandos)
-
-Para usar el skill desde Claude Code en tu Mac:
 
 ```bash
 # Skills personales (disponibles en cualquier proyecto)
@@ -109,13 +66,13 @@ cd .claude/skills
 unzip /ruta/a/seudonimizador-clinico-juridico.zip
 ```
 
-Tras descomprimir tendrás `~/.claude/skills/seudonimizador-clinico-juridico/` con todos los archivos. Claude Code lo detecta automáticamente; se invoca igual que en la app: `/seudonimizar [modo]`.
+Claude Code lo detecta automáticamente; se invoca igual que en la app: `/seudonimizar [modo]`.
 
 ### Opción 3 — Otras inteligencias artificiales
 
 El skill es texto Markdown. Cualquier asistente conversacional capaz de seguir instrucciones extensas puede aplicarlo, pegándolo como prompt inicial.
 
-1. Abre una conversación efímera o temporal en la IA correspondiente:
+1. Abre una conversación efímera o temporal:
    - **ChatGPT**: *Temporary Chat*.
    - **Mistral LeChat**: conversación efímera.
    - **Google Gemini**: chat temporal cuando esté disponible.
@@ -124,116 +81,77 @@ El skill es texto Markdown. Cualquier asistente conversacional capaz de seguir i
    - `SKILL.md`
    - `flujo.md`
    - `plantilla-tokens.md`
-3. Añade al final del bloque: *«Sigue este protocolo. Espera mi caso.»*
-4. La IA debería confirmar que el protocolo está cargado. A partir de ahí, invoca con `/seudonimizar [modo]` o describe el modo en lenguaje natural si la IA no soporta comandos de barra.
+   - `auditoria.md` (si vas a usar el modo `audit`)
+3. Añade al final: *«Sigue este protocolo. Espera mi caso.»*
+4. Invoca con `/seudonimizar [modo]` o describe el modo en lenguaje natural si la IA no soporta comandos de barra.
 
-> Avisos por plataforma:
-> - **Meta AI en WhatsApp**: no recomendado para casos sensibles por la integración con la cuenta del usuario y la falta de un modo temporal verificable.
-> - **Modelos pequeños** (≤ 7B parámetros): tienden a omitir identificadores indirectos. Prefiere modelos de razonamiento de tamaño medio o grande.
-> - **El modo `audit`** puede aplicarse a textos producidos por cualquier IA para revisar su solidez con un segundo modelo distinto del primero.
+> **Avisos por plataforma:**
+> - **Meta AI en WhatsApp**: no recomendado para casos sensibles por la integración con la cuenta del usuario y la falta de modo temporal verificable.
+> - **Modelos pequeños** (≤ 7B parámetros): tienden a omitir identificadores indirectos y a inventar más durante el parafraseo. Prefiere modelos de razonamiento de tamaño medio o grande.
+> - **El modo `audit`** puede aplicarse a textos producidos por cualquier IA, idealmente con un modelo distinto del que generó la seudonimización original.
 
-### Modo recomendado de uso (cualquier opción)
+## Modo recomendado de uso
 
 Independientemente de cómo lo instales:
 
 1. **Activa Conversación Temporal o equivalente** antes de pegar nada sensible.
-2. **Limpia los archivos en origen** si vas a adjuntar PDF/DOCX (metadatos, marcas de agua, propiedades del documento) con `exiftool` o equivalente.
-3. **Invoca** con `/seudonimizar A`, `B`, `C` o `audit`.
-4. **Verifica el mapa de tokens y la auditoría de riesgo residual** antes de aceptar el resultado.
-5. **Archiva o destruye el mapa rol-token aparte del texto transformado.** Es la "información adicional" que el RGPD pide custodiar separadamente para que la seudonimización sea efectiva (Art. 4.5).
-6. **Cierra la conversación** una vez tengas el resultado en disco local.
-
-> La Conversación Temporal es una capa de privacidad de interfaz, no una bóveda criptográfica. Reduce la exposición pero no la elimina. Para usos que requieran cumplimiento RGPD pleno (publicación, peritaje, expediente), considera procesamiento local (LLM en máquina propia) y revisión humana experta como capas adicionales.
-
----
-
-## Estructura del repositorio
-
-```
-seudonimizador-clinico-juridico/
-├── SKILL.md                 # Descriptor del skill: trigger y resumen
-├── flujo.md                 # Flujo operativo de seis pasos
-├── plantilla-entrada.md     # Formato de entrada para el usuario
-├── plantilla-tokens.md      # Catálogo de roles y convenciones
-├── auditoria.md             # Protocolo del modo audit
-├── LICENSE                  # CC BY 4.0
-├── README.md                # Este archivo
-├── CHANGELOG.md             # Historial de versiones
-├── .gitignore
-├── dist/
-│   ├── seudonimizador-clinico-juridico.zip    # Paquete de instalación para Claude.ai
-│   └── seudonimizador-clinico-juridico.skill  # Mismo paquete, extensión alternativa
-└── docs/
-    └── seudonimizador-clinico-juridico-guia-profesional-v1.0.pdf
-```
-
-El paquete de `dist/` es ligero (≈ 17 KB): contiene solo los archivos que el skill necesita en tiempo de ejecución (SKILL.md, flujo.md, plantilla-entrada.md, plantilla-tokens.md, auditoria.md) más LICENSE.
-
----
+2. **Pasa un caso por vez**. Mezclar casos en una sola sesión aumenta el riesgo de fugas cruzadas entre tokens.
+3. **Verifica el mapa rol → token** antes de aceptar el resultado. Es la fase donde más se cuela algún nombre o entidad real.
+4. **Comprueba el bloque "Control de fidelidad"** (nuevo en v1.1). Si el skill declara divergencias, regenera el texto antes de usarlo.
+5. **Archiva o destruye el mapa de tokens aparte** del texto transformado. El RGPD Art. 4.5 exige que la información que permite reidentificar se conserve separadamente. El skill entrega el mapa en bloque separable; la separación efectiva depende del usuario.
+6. **No publiques, no peritries ni incorpores a expediente oficial** un texto seudonimizado por este skill sin revisión humana experta adicional. La auditoría de riesgo residual es estimación cualitativa, no certificación.
 
 ## Encadenamiento con otros skills
 
-Está pensado para encadenarse con los skills de formulación clínica y jurídica del mismo autor:
+El seudonimizador es la primera etapa natural de un flujo profesional con LLM:
 
-- Caso clínico crudo → `/seudonimizar A` → `/cie11-formulacion-clinica` o `/dsm-formulacion-clinica`.
-- Caso jurídico crudo → `/seudonimizar B` → `/codigo-civil-formulacion-juridica`.
+- `/seudonimizar A` → `/cie11-formulacion-clinica`: caso clínico transformado y formulado.
+- `/seudonimizar A` → `/dsm-formulacion-clinica`: misma cadena con el otro nomenclador.
+- `/seudonimizar B` → `/codigo-civil-formulacion-juridica`: caso jurídico civil transformado y formulado.
 
----
+La separación del mapa rol → token debe hacerse **antes** de pasar el texto seudonimizado al siguiente skill.
 
-## Disclaimer
+## Marco normativo
 
-Este skill es una **herramienta metodológica experimental sin validación formal**. Lo que produce es seudonimización con generalización dirigida; no es anonimización en sentido jurídico. El uso real con datos sensibles es responsabilidad exclusiva del profesional habilitado que lo emplee y debe ajustarse al marco normativo aplicable (RGPD, LOPDGDD, secreto profesional, deber de sigilo).
+El RGPD distingue dos figuras:
 
-Ni el autor ni la herramienta ofrecen garantía alguna sobre la exactitud, idoneidad o consecuencias derivadas de su uso. Cualquier uso por personas no cualificadas profesionalmente queda fuera del alcance previsto del proyecto y bajo entera responsabilidad de quien lo realice.
+- **Seudonimización (Art. 4.5 RGPD).** El dato no puede atribuirse a un interesado sin información adicional, conservada por separado. Sigue siendo dato personal. Requiere medidas técnicas y organizativas.
+- **Anonimización (Considerando 26 RGPD).** El dato no puede vincularse a un interesado por ningún medio razonable. Deja de ser dato personal.
 
----
+Lo que produce este skill es **seudonimización con generalización dirigida**. Aproxima la anonimización funcional para uso secundario interno (supervisión, formación), pero **no es anonimización en sentido jurídico** y **no autoriza por sí solo** a publicar el caso, incorporarlo a un peritaje, ni difundirlo.
 
-## Referencias y atribuciones
+## Para qué NO sirve
 
-Este skill referencia, sin reproducir literalmente, las siguientes obras y marcos:
+- Anonimización conforme al Considerando 26 RGPD para publicación científica, peritaje formal, expediente oficial o cesión a terceros.
+- Casos ficticios sin valor formativo: si ya es ficticio, no hay nada que seudonimizar.
+- Procesamiento de datos identificables sin valor secundario claro.
+- Sustitución del juicio profesional sobre qué partes del caso son sensibles y por qué.
+- Ofuscación intencional de hechos relevantes para una causa o un cuadro clínico.
 
-- **RGPD** — Reglamento (UE) 2016/679 del Parlamento Europeo y del Consejo, relativo a la protección de las personas físicas en lo que respecta al tratamiento de datos personales. Artículos 4.5 (seudonimización), 9 (categorías especiales), 25 (privacidad desde el diseño), Considerando 26 (anonimización).
-- **LOPDGDD** — Ley Orgánica 3/2018, de Protección de Datos Personales y garantía de los derechos digitales (España).
-- **MDR 2017/745** — Reglamento (UE) 2017/745 sobre productos sanitarios. Citado para delimitar lo que el skill no es.
-- **Directrices del Grupo de Trabajo del Artículo 29 (WP29) sobre técnicas de anonimización** (Opinion 05/2014). Marco de referencia técnica.
+## Documentación
 
-Toda referencia es nominativa y conceptual. El usuario es responsable de cumplir las condiciones de licencia o derechos de autor de cualquier material consultado a partir de estas referencias.
+- **[SKILL.md](SKILL.md)** — descriptor formal del skill.
+- **[flujo.md](flujo.md)** — flujo operativo de seis pasos con reglas duras transversales.
+- **[plantilla-entrada.md](plantilla-entrada.md)** — guía de formato de entrada para el usuario.
+- **[plantilla-tokens.md](plantilla-tokens.md)** — catálogo de roles y convenciones de etiquetado.
+- **[auditoria.md](auditoria.md)** — protocolo del modo `audit` y rúbrica de riesgo residual.
+- **[CHANGELOG.md](CHANGELOG.md)** — historial de versiones.
+- **[docs/](docs/)** — guía profesional en PDF (si está disponible).
 
----
+## Limitaciones conocidas
 
-## Asistencia de IA
-
-Este skill ha sido elaborado con asistencia de **Claude (Anthropic)**. Su contenido refleja decisiones, criterios y revisión del autor humano, pero requiere revisión profesional adicional antes de cualquier uso real con datos sensibles.
-
----
+- Ámbito calibrado para España (RGPD, LOPDGDD, terminología procesal y sanitaria). Otros marcos jurídicos requieren ajustes.
+- No detecta automáticamente identificadores en imágenes, audio o vídeo. Solo texto.
+- La auditoría de riesgo residual es estimación cualitativa, no garantía formal.
+- La regla anti-alucinación de v1.1 reduce el riesgo de invención durante el parafraseo, pero no lo elimina por completo: las instrucciones explícitas en prompts tienden a funcionar, pero no son blindaje absoluto contra la alucinación en LLMs. Conviene auditar la salida con el modo `audit` cuando el caso es delicado.
+- El mapa rol → token se entrega en la misma respuesta que el texto transformado. La separación efectiva (RGPD Art. 4.5) depende de que el usuario archive o destruya el mapa aparte.
 
 ## Licencia
 
-[Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/deed.es). Texto resumido en [`LICENSE`](./LICENSE).
+[CC BY 4.0](LICENSE) — Creative Commons Attribution 4.0 International.
 
-Eres libre de:
+Puedes usar, modificar y redistribuir el skill, incluso comercialmente, siempre que cites la autoría y enlaces a este repositorio.
 
-- **Compartir** — copiar y redistribuir el material en cualquier medio o formato.
-- **Adaptar** — remezclar, transformar y construir a partir del material para cualquier propósito, incluso comercialmente.
+## Atribución y nota ética
 
-Bajo el siguiente término:
-
-- **Atribución** — Debes dar crédito de manera adecuada, proporcionar un enlace a la licencia, e indicar si se han realizado cambios. Puedes hacerlo en cualquier forma razonable, pero no de forma tal que sugiera que tienes el apoyo del licenciante o lo recibes por el uso que haces.
-
----
-
-## Cómo citarlo
-
-Si lo referencias en un trabajo o adaptación:
-
-> Pablo (2026). *seudonimizador-clinico-juridico* (v1.0). Skill de seudonimización con generalización dirigida para casos clínicos y jurídicos. mindandhealth.org · github.com/novanoticia/seudonimizador-clinico-juridico
-
----
-
-## Feedback y contribuciones
-
-Cualquier feedback profesional es valioso, especialmente sobre: identificadores indirectos no detectados, comportamiento inesperado en modo `C`, fallos en la consistencia de tokens, casos jurídicos donde el desplazamiento temporal rompe la lógica procesal, sugerencias de modos adicionales.
-
-El autor puede ser contactado a través de [mindandhealth.org](https://mindandhealth.org). Issues y pull requests en GitHub también son bienvenidos. Las contribuciones de **clínicos y juristas habilitados** que quieran probar el skill con casos reales son especialmente valoradas.
-
-Más detalles sobre cómo dar feedback en la guía PDF.
+Este skill ha sido desarrollado con asistencia de IA (Claude, de Anthropic) en iteración con un usuario profesional. La estructura, las reglas duras, el catálogo de tokens y el protocolo de auditoría reflejan decisiones humanas tomadas en respuesta a casos de prueba reales. El uso del skill **requiere revisión humana experta** en cada aplicación, y no sustituye los procedimientos formales de anonimización exigidos por el marco normativo vigente.

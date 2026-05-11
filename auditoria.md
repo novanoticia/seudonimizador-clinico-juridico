@@ -64,6 +64,17 @@ Buscar:
 - Metadatos visibles (encabezados institucionales, firmas, números de página identificables, nombres de archivo originales).
 - Idiomas mezclados sin justificación (a veces los nombres propios sobreviven en una cita en otro idioma).
 
+### 7. Fidelidad al original (condicional)
+Solo si el usuario aporta también el texto original junto al seudonimizado. Si no lo aporta, marcar esta comprobación como **No aplicable** y avisar de la limitación.
+
+Buscar elementos del texto seudonimizado que **no tengan correspondencia en el original**:
+- Síntomas, diagnósticos, hallazgos exploratorios o antecedentes clínicos añadidos.
+- Hechos, plazos, cuantías o fundamentos jurídicos no presentes en el original.
+- Matices narrativos, inferencias causales o contextualizaciones introducidas durante el parafraseo.
+- "Redondeo" de la narrativa: frases puente o transiciones que aportan información implícita ausente del original.
+
+Este es el control específico contra alucinaciones del paso de transformación. Una sola fuga aquí degrada el caso silenciosamente y debe escalar el nivel de riesgo a **alto** independientemente del resto de comprobaciones.
+
 ## Salida del modo `audit`
 
 ```
@@ -77,6 +88,9 @@ Buscar:
 4. Numéricos identificadores: [...]
 5. Identificadores indirectos: [...]
 6. Coherencia interna: [...]
+7. Fidelidad al original: [Pasa / Fallo / Duda / No aplicable]
+   - Si el original no se aportó: marcar No aplicable y recordar la limitación.
+   - Si hay divergencias: listarlas con localización y motivo probable.
 
 ### Riesgo residual estimado
 - Nivel: [bajo / medio / alto]
