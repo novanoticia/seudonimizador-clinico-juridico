@@ -4,6 +4,25 @@ Todos los cambios relevantes del skill `seudonimizador-clinico-juridico` se docu
 
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y la numeración aplica [Semantic Versioning](https://semver.org/lang/es/) en su lectura adaptada para skills (mayor = ruptura de comportamiento, menor = ampliación o refuerzo de reglas, parche = correcciones puntuales).
 
+## [1.2] — 2026-05-31
+
+### Motivación
+
+El paquete no se importaba como skill en Perplexity: devolvía `description exceeds maximum length of 1024 characters`. La causa no era el número de caracteres (1006, por debajo del límite) sino que Perplexity mide ese límite **en bytes UTF-8**. Al estar la descripción en español, los caracteres acentuados y la `ñ` ocupan 2 bytes cada uno, elevando el total a 1027 bytes. Claude.ai cuenta caracteres (o aplica un margen mayor), por lo que la importación allí nunca falló y el problema pasó desapercibido.
+
+### Cambiado
+
+- **`SKILL.md` — descripción del frontmatter condensada de 1027 a 912 bytes UTF-8.** Se mantienen el trigger `/seudonimizar`, los cuatro modos (A, B, C, audit), las frases de activación en lenguaje natural y la advertencia RGPD/LOPDGDD. Se reduce el número de ejemplos redundantes y se elimina el marcado Markdown del frontmatter. La lógica del skill no se toca.
+
+### Añadido
+
+- **`README.md` — Opción 2: Perplexity (Skills).** Instalación nativa por `.zip`, paralela a la de Claude.ai, con renumeración de las opciones siguientes (Claude Code → 3, Otras IA → 4) y una nota técnica sobre el límite en bytes UTF-8 para evitar la recaída al editar la descripción.
+
+### Notas
+
+- **No hay cambios de comportamiento.** Una instalación previa en Claude.ai produce salidas idénticas; el salto de versión refleja la ampliación de plataformas soportadas y la documentación nueva, no un cambio de reglas.
+- Paquetes `dist/*.zip` y `dist/*.skill` regenerados con el `SKILL.md` corregido.
+
 ## [1.1] — 2026-05-11
 
 ### Motivación

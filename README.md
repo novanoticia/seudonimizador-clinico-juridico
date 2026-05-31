@@ -52,7 +52,18 @@ A partir de ese momento, el skill se invoca con `/seudonimizar` seguido del modo
 
 > El archivo equivalente **[`dist/seudonimizador-clinico-juridico.skill`](dist/seudonimizador-clinico-juridico.skill)** es el mismo paquete con extensión alternativa, presente para compatibilidad con marketplaces de terceros. Para Claude.ai usa directamente el `.zip`.
 
-### Opción 2 — Claude Code (línea de comandos)
+### Opción 2 — Perplexity (Skills)
+
+Perplexity admite el mismo paquete de skill que Claude.ai, sin necesidad de pegar texto.
+
+1. Descarga **[`dist/seudonimizador-clinico-juridico.zip`](dist/seudonimizador-clinico-juridico.zip)**.
+2. En Perplexity, entra en la gestión de **Skills** y elige **subir / importar skill**.
+3. Selecciona el archivo `.zip` descargado.
+4. El skill se invoca igual que en Claude: `/seudonimizar` seguido del modo (`A`, `B`, `C`, `audit`).
+
+> **Nota técnica:** Perplexity valida la longitud del campo `description` del skill **en bytes UTF-8** (límite 1024), no en caracteres. Como el texto está en español, las vocales acentuadas y la `ñ` ocupan 2 bytes cada una. La descripción de este skill se mantiene deliberadamente por debajo de ese umbral (≈ 912 bytes) para garantizar la importación. Si editas la descripción, no superes ~1000 bytes UTF-8 o Perplexity rechazará el `.zip`.
+
+### Opción 3 — Claude Code (línea de comandos)
 
 ```bash
 # Skills personales (disponibles en cualquier proyecto)
@@ -68,7 +79,7 @@ unzip /ruta/a/seudonimizador-clinico-juridico.zip
 
 Claude Code lo detecta automáticamente; se invoca igual que en la app: `/seudonimizar [modo]`.
 
-### Opción 3 — Otras inteligencias artificiales
+### Opción 4 — Otras inteligencias artificiales
 
 El skill es texto Markdown. Cualquier asistente conversacional capaz de seguir instrucciones extensas puede aplicarlo, pegándolo como prompt inicial.
 
