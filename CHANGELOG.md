@@ -4,6 +4,22 @@ Todos los cambios relevantes del skill `seudonimizador-clinico-juridico` se docu
 
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y la numeración aplica [Semantic Versioning](https://semver.org/lang/es/) en su lectura adaptada para skills (mayor = ruptura de comportamiento, menor = ampliación o refuerzo de reglas, parche = correcciones puntuales).
 
+## [1.3] — 2026-06-10
+
+### Añadido
+
+- **`README.md` — Opción 3: Mistral AI (Skills).** Instalación nativa en el espacio *Work* descomprimiendo el paquete y seleccionando la carpeta del skill, con renumeración de las opciones siguientes (Claude Code → 4, Otras IA → 5).
+
+### Cambiado
+
+- **`SKILL.md` — descripción del frontmatter reducida a 455 caracteres / 468 bytes** (antes 912 bytes) para cumplir el límite de **500 caracteres** que aplica Mistral. Se conservan el trigger `/seudonimizar`, los cuatro modos (A, B, C, audit) y la advertencia RGPD/LOPDGDD; se recorta el número de ejemplos de activación y la descripción pasa a bloque escalar YAML (`>-`). La lógica del skill no se toca.
+- **`README.md` — nota técnica de la Opción 2** actualizada con los límites por plataforma (Perplexity 1024 bytes, Mistral 500 caracteres) y la longitud real vigente.
+
+### Notas
+
+- **No hay cambios de comportamiento.** El salto de versión refleja la ampliación de plataformas soportadas (Mistral) y el ajuste del descriptor, no un cambio de reglas.
+- Paquetes `dist/*.zip` y `dist/*.skill` regenerados con el `SKILL.md` corregido.
+
 ## [1.2] — 2026-05-31
 
 ### Motivación

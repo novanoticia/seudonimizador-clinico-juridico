@@ -2,7 +2,7 @@
 
 Skill de transformación de casos reales clínicos y jurídicos en versiones aptas para uso secundario (estudio, supervisión, formación, redacción didáctica), conservando utilidad analítica y eliminando identificadores directos e indirectos.
 
-**Versión actual: v1.1** ([changelog](CHANGELOG.md))
+**Versión actual: v1.3** ([changelog](CHANGELOG.md))
 
 > **No anonimiza en sentido fuerte.** Produce textos seudonimizados con generalización dirigida, marcando explícitamente el riesgo residual. No sustituye los procedimientos formales de anonimización exigidos por el RGPD/LOPDGDD para publicación científica, peritaje formal, expediente oficial ni cesión a terceros.
 
@@ -61,9 +61,18 @@ Perplexity admite el mismo paquete de skill que Claude.ai, sin necesidad de pega
 3. Selecciona el archivo `.zip` descargado.
 4. El skill se invoca igual que en Claude: `/seudonimizar` seguido del modo (`A`, `B`, `C`, `audit`).
 
-> **Nota técnica:** Perplexity valida la longitud del campo `description` del skill **en bytes UTF-8** (límite 1024), no en caracteres. Como el texto está en español, las vocales acentuadas y la `ñ` ocupan 2 bytes cada una. La descripción de este skill se mantiene deliberadamente por debajo de ese umbral (≈ 912 bytes) para garantizar la importación. Si editas la descripción, no superes ~1000 bytes UTF-8 o Perplexity rechazará el `.zip`.
+> **Nota técnica:** el límite de longitud del campo `description` depende de la plataforma: Perplexity valida **en bytes UTF-8** (límite 1024) y Mistral **en caracteres** (límite 500). En español, las vocales acentuadas y la `ñ` ocupan 2 bytes cada una. La descripción de este skill mide **455 caracteres / 468 bytes**, dentro de ambos umbrales. Si la editas, no superes los **500 caracteres** para conservar la compatibilidad con Mistral.
 
-### Opción 3 — Claude Code (línea de comandos)
+### Opción 3 — Mistral AI (Skills)
+
+Mistral admite Skills en su espacio **Work**, a partir de la carpeta del skill descomprimida.
+
+1. Descarga **[`dist/seudonimizador-clinico-juridico.zip`](dist/seudonimizador-clinico-juridico.zip)** y **descomprímelo**.
+2. En Mistral AI, dentro del espacio **Work**, abre la sección de **Skills**.
+3. Selecciona la **carpeta** resultante (`seudonimizador-clinico-juridico/`, la que contiene `SKILL.md`).
+4. Se invoca igual que en las demás plataformas: `/seudonimizar` seguido del modo (`A`, `B`, `C`, `audit`).
+
+### Opción 4 — Claude Code (línea de comandos)
 
 ```bash
 # Skills personales (disponibles en cualquier proyecto)
@@ -79,7 +88,7 @@ unzip /ruta/a/seudonimizador-clinico-juridico.zip
 
 Claude Code lo detecta automáticamente; se invoca igual que en la app: `/seudonimizar [modo]`.
 
-### Opción 4 — Otras inteligencias artificiales
+### Opción 5 — Otras inteligencias artificiales
 
 El skill es texto Markdown. Cualquier asistente conversacional capaz de seguir instrucciones extensas puede aplicarlo, pegándolo como prompt inicial.
 
