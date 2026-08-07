@@ -4,6 +4,23 @@ Todos los cambios relevantes del skill `seudonimizador-clinico-juridico` se docu
 
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y la numeración aplica [Semantic Versioning](https://semver.org/lang/es/) en su lectura adaptada para skills (mayor = ruptura de comportamiento, menor = ampliación o refuerzo de reglas, parche = correcciones puntuales).
 
+## [1.4] — 2026-08-07
+
+### Añadido
+
+- El repositorio es ahora un **plugin conforme a [Agent Plugins 1.0.0](https://agent-plugins.org/specification)**, el formato portátil de empaquetado de la Agentic AI Foundation. Se añaden `plugin.json` (portable, con el `$schema` canónico) y `.claude-plugin/plugin.json` (Claude Code). Habilita una vía de instalación nueva —como plugin en Claude Code y Cowork, Opción 5 del README— sin retirar ninguna de las anteriores.
+- `scripts/build-dist.sh`: el paquete de `dist/` se armaba a mano; ahora se regenera con un script. Al cambiar de sitio la fuente del skill, dejar el empaquetado como algo que recordar habría sido una fuente de derivas.
+
+### Cambiado
+
+- El skill pasa de la raíz del repositorio a `skills/seudonimizador-clinico-juridico/`, junto con `flujo.md`, `auditoria.md`, `plantilla-entrada.md` y `plantilla-tokens.md`. Es la ubicación fija que el §6.1 de la spec exige para descubrir skills. Los acompañantes quedan **planos** al lado del `SKILL.md`, no bajo `references/`, porque el cuerpo los referencia por nombre pelado.
+- Enlaces del README actualizados a la ruta nueva.
+
+### Sin cambios
+
+- **El contenido del skill no se toca**: ni el `SKILL.md`, ni el flujo, ni las plantillas, ni el protocolo de auditoría.
+- **El paquete de `dist/` conserva exactamente la misma forma**: una carpeta `seudonimizador-clinico-juridico/` con los cinco `.md` y la `LICENSE`. Verificado comparando la lista de ficheros antes y después de regenerarlo. Las opciones 1 a 4 del README (claude.ai, Perplexity, Mistral y Claude Code) siguen funcionando igual.
+
 ## [1.3] — 2026-06-10
 
 ### Añadido
