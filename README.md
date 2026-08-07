@@ -88,7 +88,30 @@ unzip /ruta/a/seudonimizador-clinico-juridico.zip
 
 Claude Code lo detecta automáticamente; se invoca igual que en la app: `/seudonimizar [modo]`.
 
-### Opción 5 — Otras inteligencias artificiales
+### Opción 5 — Como plugin (Claude Code y Cowork)
+
+Desde la v1.4 el repositorio también es un **plugin** conforme a
+[Agent Plugins 1.0.0](https://agent-plugins.org/specification), el formato
+portátil de la Agentic AI Foundation. Eso permite instalarlo entero en vez de
+copiar la carpeta del skill:
+
+```bash
+# Probarlo sin instalar
+claude --plugin-dir /ruta/al/repo
+
+# O clonar e instalar desde el repositorio
+git clone https://github.com/novanoticia/seudonimizador-clinico-juridico
+claude --plugin-dir ./seudonimizador-clinico-juridico
+```
+
+En Cowork: comprime la **raíz del repositorio** (donde están `plugin.json`,
+`.claude-plugin/` y `skills/`) y súbela en *Customize → Plugins → Upload*.
+
+Invocado como plugin, el comando queda namespaced:
+`/seudonimizador-clinico-juridico:seudonimizador-clinico-juridico`. Si prefieres
+el `/seudonimizar` corto, usa la Opción 4.
+
+### Opción 6 — Otras inteligencias artificiales
 
 El skill es texto Markdown. Cualquier asistente conversacional capaz de seguir instrucciones extensas puede aplicarlo, pegándolo como prompt inicial.
 
@@ -150,11 +173,14 @@ Lo que produce este skill es **seudonimización con generalización dirigida**. 
 
 ## Documentación
 
-- **[SKILL.md](SKILL.md)** — descriptor formal del skill.
-- **[flujo.md](flujo.md)** — flujo operativo de seis pasos con reglas duras transversales.
-- **[plantilla-entrada.md](plantilla-entrada.md)** — guía de formato de entrada para el usuario.
-- **[plantilla-tokens.md](plantilla-tokens.md)** — catálogo de roles y convenciones de etiquetado.
-- **[auditoria.md](auditoria.md)** — protocolo del modo `audit` y rúbrica de riesgo residual.
+El skill vive en `skills/seudonimizador-clinico-juridico/`, siguiendo la
+estructura de [Agent Plugins 1.0.0](https://agent-plugins.org/specification).
+
+- **[SKILL.md](skills/seudonimizador-clinico-juridico/SKILL.md)** — descriptor formal del skill.
+- **[flujo.md](skills/seudonimizador-clinico-juridico/flujo.md)** — flujo operativo de seis pasos con reglas duras transversales.
+- **[plantilla-entrada.md](skills/seudonimizador-clinico-juridico/plantilla-entrada.md)** — guía de formato de entrada para el usuario.
+- **[plantilla-tokens.md](skills/seudonimizador-clinico-juridico/plantilla-tokens.md)** — catálogo de roles y convenciones de etiquetado.
+- **[auditoria.md](skills/seudonimizador-clinico-juridico/auditoria.md)** — protocolo del modo `audit` y rúbrica de riesgo residual.
 - **[CHANGELOG.md](CHANGELOG.md)** — historial de versiones.
 - **[docs/](docs/)** — guía profesional en PDF (si está disponible).
 
