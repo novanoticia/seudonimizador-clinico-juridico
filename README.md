@@ -12,12 +12,12 @@ Skill de transformación de casos reales clínicos y jurídicos en versiones apt
 > descubre.
 >
 > **Funciona en ChatGPT.** El skill es texto —protocolo, criterios y plantillas, sin
-> ejecución local—, así que se sube tal cual y funciona igual que en Claude. Su
+> ejecución local—, así que se instala desde **Complementos** con **Work** activado y
+> funciona igual que en Claude. Su
 > frontmatter valida contra el conjunto cerrado de
 > [Agent Skills](https://agentskills.io/specification), que es lo que ChatGPT, claude.ai
 > y la Skills API exigen para aceptar la subida: una clave de más ahí no se ignora,
-> falla con error duro. Las *Skills* de ChatGPT requieren plan Business, Enterprise,
-> Healthcare o Edu.
+> falla con error duro. Están también en el **plan gratuito**, con límites de uso.
 
 > **No anonimiza en sentido fuerte.** Produce textos seudonimizados con generalización dirigida, marcando explícitamente el riesgo residual. No sustituye los procedimientos formales de anonimización exigidos por el RGPD/LOPDGDD para publicación científica, peritaje formal, expediente oficial ni cesión a terceros.
 
@@ -67,21 +67,28 @@ A partir de ese momento, el skill se invoca con `/seudonimizar` seguido del modo
 
 > El archivo equivalente **[`dist/seudonimizador-clinico-juridico.skill`](dist/seudonimizador-clinico-juridico.skill)** es el mismo paquete con extensión alternativa, presente para compatibilidad con marketplaces de terceros. Para Claude.ai usa directamente el `.zip`.
 
-### Opción 2 — ChatGPT (Skills)
+### Opción 2 — ChatGPT (Complementos)
 
-ChatGPT admite el mismo paquete, sin pegar texto ni reempaquetar.
+ChatGPT instala este repositorio como **complemento**, sin descargar nada ni
+reempaquetar.
 
-1. Descarga **[`dist/seudonimizador-clinico-juridico.zip`](dist/seudonimizador-clinico-juridico.zip)**.
-2. En ChatGPT, ve a **Plugins → Skills**.
-3. Pulsa **Create** y luego **Upload from your computer**.
-4. Selecciona el `.zip` descargado y confirma.
+1. Abre ChatGPT y **activa `Work` en el selector**.
+2. Ve a **Complementos** (*Plugins*).
+3. Busca el complemento por nombre, o **añádelo desde URL** con la de este
+   repositorio:
+   ```
+   https://github.com/novanoticia/seudonimizador-clinico-juridico
+   ```
 
-El skill se invoca igual que en Claude: `/seudonimizar` seguido del modo (`A`, `B`, `C`, `audit`).
+Se invoca igual que en Claude: `/seudonimizar` seguido del modo (`A`, `B`, `C`, `audit`).
 
-> Requiere un plan **Business, Enterprise, Healthcare o Edu**: en las cuentas personales
-> las *Skills* de ChatGPT todavía no están disponibles. El paquete cumple sus requisitos
-> de forma —una única carpeta en la raíz del zip, un solo `SKILL.md`, `description` por
-> debajo de 1024 caracteres— sin necesidad de tocar nada.
+> Funciona también en el **plan gratuito**, con límites de uso.
+>
+> Que la instalación sea desde la URL del repositorio, y no subiendo un zip, es
+> posible porque el repo es un plugin conforme a
+> [Agent Plugins 1.0.0](https://agent-plugins.org/specification): lleva el
+> `plugin.json` portable en la raíz y el skill en `skills/seudonimizador-clinico-juridico/`. El paquete de
+> `dist/` sigue estando ahí para las plataformas que sí piden un zip.
 
 ### Opción 3 — Perplexity (Skills)
 
