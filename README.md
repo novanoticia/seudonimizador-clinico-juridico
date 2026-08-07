@@ -2,7 +2,22 @@
 
 Skill de transformación de casos reales clínicos y jurídicos en versiones aptas para uso secundario (estudio, supervisión, formación, redacción didáctica), conservando utilidad analítica y eliminando identificadores directos e indirectos.
 
-**Versión actual: v1.3** ([changelog](CHANGELOG.md))
+**Versión actual: v1.4** ([changelog](CHANGELOG.md))
+
+> **Compatible con [Agent Plugins 1.0.0](https://agent-plugins.org/specification)** — el
+> formato portátil de empaquetado de la Agentic AI Foundation (OpenAI, Amazon, Microsoft,
+> Cursor y Vercel, con Google como *core maintainer*). El paquete lleva el manifiesto
+> portable `plugin.json` en la raíz y el skill en
+> `skills/seudonimizador-clinico-juridico/`, así que cualquier cliente conformante lo
+> descubre.
+>
+> **Funciona en ChatGPT.** El skill es texto —protocolo, criterios y plantillas, sin
+> ejecución local—, así que se sube tal cual y funciona igual que en Claude. Su
+> frontmatter valida contra el conjunto cerrado de
+> [Agent Skills](https://agentskills.io/specification), que es lo que ChatGPT, claude.ai
+> y la Skills API exigen para aceptar la subida: una clave de más ahí no se ignora,
+> falla con error duro. Las *Skills* de ChatGPT requieren plan Business, Enterprise,
+> Healthcare o Edu.
 
 > **No anonimiza en sentido fuerte.** Produce textos seudonimizados con generalización dirigida, marcando explícitamente el riesgo residual. No sustituye los procedimientos formales de anonimización exigidos por el RGPD/LOPDGDD para publicación científica, peritaje formal, expediente oficial ni cesión a terceros.
 
@@ -52,7 +67,23 @@ A partir de ese momento, el skill se invoca con `/seudonimizar` seguido del modo
 
 > El archivo equivalente **[`dist/seudonimizador-clinico-juridico.skill`](dist/seudonimizador-clinico-juridico.skill)** es el mismo paquete con extensión alternativa, presente para compatibilidad con marketplaces de terceros. Para Claude.ai usa directamente el `.zip`.
 
-### Opción 2 — Perplexity (Skills)
+### Opción 2 — ChatGPT (Skills)
+
+ChatGPT admite el mismo paquete, sin pegar texto ni reempaquetar.
+
+1. Descarga **[`dist/seudonimizador-clinico-juridico.zip`](dist/seudonimizador-clinico-juridico.zip)**.
+2. En ChatGPT, ve a **Plugins → Skills**.
+3. Pulsa **Create** y luego **Upload from your computer**.
+4. Selecciona el `.zip` descargado y confirma.
+
+El skill se invoca igual que en Claude: `/seudonimizar` seguido del modo (`A`, `B`, `C`, `audit`).
+
+> Requiere un plan **Business, Enterprise, Healthcare o Edu**: en las cuentas personales
+> las *Skills* de ChatGPT todavía no están disponibles. El paquete cumple sus requisitos
+> de forma —una única carpeta en la raíz del zip, un solo `SKILL.md`, `description` por
+> debajo de 1024 caracteres— sin necesidad de tocar nada.
+
+### Opción 3 — Perplexity (Skills)
 
 Perplexity admite el mismo paquete de skill que Claude.ai, sin necesidad de pegar texto.
 
@@ -63,7 +94,7 @@ Perplexity admite el mismo paquete de skill que Claude.ai, sin necesidad de pega
 
 > **Nota técnica:** el límite de longitud del campo `description` depende de la plataforma: Perplexity valida **en bytes UTF-8** (límite 1024) y Mistral **en caracteres** (límite 500). En español, las vocales acentuadas y la `ñ` ocupan 2 bytes cada una. La descripción de este skill mide **455 caracteres / 468 bytes**, dentro de ambos umbrales. Si la editas, no superes los **500 caracteres** para conservar la compatibilidad con Mistral.
 
-### Opción 3 — Mistral AI (Skills)
+### Opción 4 — Mistral AI (Skills)
 
 Mistral admite Skills en su espacio **Work**, a partir de la carpeta del skill descomprimida.
 
@@ -72,7 +103,7 @@ Mistral admite Skills en su espacio **Work**, a partir de la carpeta del skill d
 3. Selecciona la **carpeta** resultante (`seudonimizador-clinico-juridico/`, la que contiene `SKILL.md`).
 4. Se invoca igual que en las demás plataformas: `/seudonimizar` seguido del modo (`A`, `B`, `C`, `audit`).
 
-### Opción 4 — Claude Code (línea de comandos)
+### Opción 5 — Claude Code (línea de comandos)
 
 ```bash
 # Skills personales (disponibles en cualquier proyecto)
@@ -88,7 +119,7 @@ unzip /ruta/a/seudonimizador-clinico-juridico.zip
 
 Claude Code lo detecta automáticamente; se invoca igual que en la app: `/seudonimizar [modo]`.
 
-### Opción 5 — Como plugin (Claude Code y Cowork)
+### Opción 6 — Como plugin (Claude Code y Cowork)
 
 Desde la v1.4 el repositorio también es un **plugin** conforme a
 [Agent Plugins 1.0.0](https://agent-plugins.org/specification), el formato
@@ -109,9 +140,9 @@ En Cowork: comprime la **raíz del repositorio** (donde están `plugin.json`,
 
 Invocado como plugin, el comando queda namespaced:
 `/seudonimizador-clinico-juridico:seudonimizador-clinico-juridico`. Si prefieres
-el `/seudonimizar` corto, usa la Opción 4.
+el `/seudonimizar` corto, usa la Opción 5.
 
-### Opción 6 — Otras inteligencias artificiales
+### Opción 7 — Otras inteligencias artificiales
 
 El skill es texto Markdown. Cualquier asistente conversacional capaz de seguir instrucciones extensas puede aplicarlo, pegándolo como prompt inicial.
 
