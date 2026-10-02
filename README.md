@@ -56,7 +56,7 @@ Detalle completo en [CHANGELOG.md](CHANGELOG.md).
 
 ### Opción 1 — Claude.ai (recomendada para uso conversacional)
 
-1. Descarga **[`dist/seudonimizador-clinico-juridico.zip`](dist/seudonimizador-clinico-juridico.zip)**.
+1. Descarga **[`seudonimizador-clinico-juridico.zip`](https://github.com/novanoticia/seudonimizador-clinico-juridico/releases/latest/download/seudonimizador-clinico-juridico.zip)**.
 2. En Claude.ai, ve a **Ajustes → Capacidades → Skills**.
 3. Asegúrate de que **Code execution and file creation** está activado.
 4. Pulsa **Subir skill** (o *Upload skill*).
@@ -65,7 +65,7 @@ Detalle completo en [CHANGELOG.md](CHANGELOG.md).
 
 A partir de ese momento, el skill se invoca con `/seudonimizar` seguido del modo (`A`, `B`, `C`, `audit`) en cualquier conversación. **Recomendado**: hazlo en una **Conversación Temporal** para minimizar la huella de los datos sensibles.
 
-> El archivo equivalente **[`dist/seudonimizador-clinico-juridico.skill`](dist/seudonimizador-clinico-juridico.skill)** es el mismo paquete con extensión alternativa, presente para compatibilidad con marketplaces de terceros. Para Claude.ai usa directamente el `.zip`.
+> El archivo equivalente **[`seudonimizador-clinico-juridico.skill`](https://github.com/novanoticia/seudonimizador-clinico-juridico/releases/latest/download/seudonimizador-clinico-juridico.skill)** es el mismo paquete con extensión alternativa, presente para compatibilidad con marketplaces de terceros. Ambos están en la página de [Releases](https://github.com/novanoticia/seudonimizador-clinico-juridico/releases/latest). Para Claude.ai usa directamente el `.zip`.
 
 ### Opción 2 — ChatGPT (Complementos)
 
@@ -88,13 +88,15 @@ Se invoca igual que en Claude: `/seudonimizar` seguido del modo (`A`, `B`, `C`, 
 > posible porque el repo es un plugin conforme a
 > [Agent Plugins 1.0.0](https://agent-plugins.org/specification): lleva el
 > `plugin.json` portable en la raíz y el skill en `skills/seudonimizador-clinico-juridico/`. El paquete de
-> `dist/` sigue estando ahí para las plataformas que sí piden un zip.
+> Para las plataformas que sí piden un zip, el paquete se descarga desde la
+> sección [Releases](https://github.com/novanoticia/seudonimizador-clinico-juridico/releases/latest)
+> (no se versiona dentro del repositorio).
 
 ### Opción 3 — Perplexity (Skills)
 
 Perplexity admite el mismo paquete de skill que Claude.ai, sin necesidad de pegar texto.
 
-1. Descarga **[`dist/seudonimizador-clinico-juridico.zip`](dist/seudonimizador-clinico-juridico.zip)**.
+1. Descarga **[`seudonimizador-clinico-juridico.zip`](https://github.com/novanoticia/seudonimizador-clinico-juridico/releases/latest/download/seudonimizador-clinico-juridico.zip)**.
 2. En Perplexity, entra en la gestión de **Skills** y elige **subir / importar skill**.
 3. Selecciona el archivo `.zip` descargado.
 4. El skill se invoca igual que en Claude: `/seudonimizar` seguido del modo (`A`, `B`, `C`, `audit`).
@@ -105,7 +107,7 @@ Perplexity admite el mismo paquete de skill que Claude.ai, sin necesidad de pega
 
 Mistral admite Skills en su espacio **Work**, a partir de la carpeta del skill descomprimida.
 
-1. Descarga **[`dist/seudonimizador-clinico-juridico.zip`](dist/seudonimizador-clinico-juridico.zip)** y **descomprímelo**.
+1. Descarga **[`seudonimizador-clinico-juridico.zip`](https://github.com/novanoticia/seudonimizador-clinico-juridico/releases/latest/download/seudonimizador-clinico-juridico.zip)** y **descomprímelo**.
 2. En Mistral AI, dentro del espacio **Work**, abre la sección de **Skills**.
 3. Selecciona la **carpeta** resultante (`seudonimizador-clinico-juridico/`, la que contiene `SKILL.md`).
 4. Se invoca igual que en las demás plataformas: `/seudonimizar` seguido del modo (`A`, `B`, `C`, `audit`).

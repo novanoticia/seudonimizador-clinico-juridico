@@ -4,6 +4,10 @@ set -euo pipefail
 # ═══════════════════════════════════════════════════════════════
 # build-dist.sh — regenera dist/ desde skills/<nombre>/
 #
+# dist/ está en .gitignore: los paquetes no se versionan, se adjuntan
+# como activos de una GitHub Release (los directorios de plugins no
+# pueden inspeccionar binarios dentro del repo).
+#
 # Hasta la v1.3 el paquete se armaba a mano desde la raíz del repo. Al
 # pasar el skill a skills/<nombre>/ (estructura de Agent Plugins 1.0.0)
 # la fuente cambia de sitio, así que el empaquetado deja de ser algo que
