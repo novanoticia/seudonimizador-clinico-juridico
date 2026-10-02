@@ -4,6 +4,18 @@ Todos los cambios relevantes del skill `seudonimizador-clinico-juridico` se docu
 
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y la numeración aplica [Semantic Versioning](https://semver.org/lang/es/) en su lectura adaptada para skills (mayor = ruptura de comportamiento, menor = ampliación o refuerzo de reglas, parche = correcciones puntuales).
 
+## [Sin publicar]
+
+### Añadido
+
+- **Icono del plugin** en `.claude-plugin/icon.png` (PNG cuadrado de 1024 × 1024 px), requerido por el directorio de plugins de Claude (`ICON_MISSING`).
+
+### Cambiado
+
+- **Versión de los manifiestos alineada con el CHANGELOG**: `plugin.json`, `.claude-plugin/plugin.json` y `.claude-plugin/marketplace.json` pasan de `1.3.0` a `1.4.0`.
+
+- **`dist/` sale del control de versiones** (queda en `.gitignore`). El `.zip` y el `.skill` son binarios que el validador del directorio de plugins de Claude no puede inspeccionar (`BINARIES_NOT_INSPECTED`) y retenía el envío. Ahora se publican como activos de una **GitHub Release**, y los enlaces del README apuntan a `releases/latest/download/…`. `scripts/build-dist.sh` sigue generándolos.
+
 ## [1.4] — 2026-08-07
 
 ### Añadido

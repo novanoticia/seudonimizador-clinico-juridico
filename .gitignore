@@ -28,3 +28,6 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+
+# Paquetes generados por scripts/build-dist.sh: se publican como GitHub Release, no se versionan
+dist/
