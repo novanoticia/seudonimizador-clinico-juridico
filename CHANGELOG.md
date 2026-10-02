@@ -8,7 +8,7 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y l
 
 ### Añadido
 
-- **Icono del plugin** en `.claude-plugin/icon.png` (PNG cuadrado de 1024 × 1024 px), requerido por el directorio de plugins de Claude (`ICON_MISSING`).
+- **Icono del plugin** (PNG cuadrado de 1024 × 1024 px) en la carpeta `.claude-plugin/`, requerido por el directorio de plugins de Claude (`ICON_MISSING`).
 
 ### Cambiado
 
