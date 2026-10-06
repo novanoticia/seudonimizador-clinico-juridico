@@ -2,7 +2,7 @@
 
 Skill de transformación de casos reales clínicos y jurídicos en versiones aptas para uso secundario (estudio, supervisión, formación, redacción didáctica), conservando utilidad analítica y eliminando identificadores directos e indirectos.
 
-**Versión actual: v1.4** ([changelog](CHANGELOG.md))
+**Versión actual: v1.5** ([changelog](CHANGELOG.md))
 
 > **Compatible con [Agent Plugins 1.0.0](https://agent-plugins.org/specification)** — el
 > formato portátil de empaquetado de la Agentic AI Foundation (OpenAI, Amazon, Microsoft,
@@ -41,6 +41,55 @@ Sintaxis: `/seudonimizar [modo]` seguido del caso o adjuntando archivo.
 - **`audit`**. Audita un texto ya seudonimizado (por este skill o por otra vía). Devuelve fugas detectadas, riesgo estimado y propuesta de generalización adicional. Desde v1.1 audita también la **fidelidad al original** si se aporta el texto original junto al seudonimizado.
 
 Si no se indica modo, el skill pregunta. No hay modo por defecto: confundir A y B degrada el resultado.
+
+## Idioma de la respuesta
+
+Por defecto el skill responde en **español**, igual que siempre. Si quieres que el **marco** de la
+respuesta (encabezados, etiquetas, veredictos, preguntas y avisos) salga en otro idioma, escribe un
+código de idioma tras el modo. Va **solo en la primera línea** y el caso empieza en la **línea siguiente**:
+
+```
+/seudonimizar A en
+<aquí el caso>
+```
+
+| Código | Idioma | Estado |
+|---|---|---|
+| `es` | Español (por defecto) | Original: es la referencia y no cambia |
+| `en` | Inglés | Borrador de IA, sin revisión humana |
+| `fr` | Francés | Borrador de IA, sin revisión humana |
+| `ca` | Catalán | Borrador de IA, sin revisión humana |
+| `gl` | Gallego | Borrador de IA, sin revisión humana |
+| `eu` | Euskera | **Experimental**: borrador de IA de alto riesgo, con advertencia reforzada |
+
+**Ninguna de las traducciones ha sido revisada por una persona.** Las ha redactado una IA y contienen
+frases de seguridad y de contenido clínico y jurídico: requieren revisión humana antes de usarse con
+casos reales (en `eu`, imprescindible). El detalle, idioma por idioma, está en
+[docs/estado-traducciones.md](docs/estado-traducciones.md).
+
+**Qué se traduce y qué no.** Se traduce el marco. **No** se traducen: el texto del caso (conserva su
+idioma), los tokens (`[PACIENTE_A]`…), `[DATO_ELIMINADO]` y `[NO_CONSTA]`, los modos (`A`, `B`, `C`,
+`audit`), el comando ni los nombres de fichero. Por eso, en un caso en euskera verás tokens en español.
+
+**Casos límite.**
+- `es` equivale a no poner código.
+- Un **código desconocido** avisa en español, lista los idiomas disponibles y continúa en español.
+- Si la plataforma cargó **solo `SKILL.md`** y no los catálogos, el skill **responde en español**, lo
+  dice en una frase y no inventa la traducción.
+- El código solo se reconoce si la primera línea tiene exactamente tres elementos
+  (`/seudonimizar`, modo y código), o dos si falta el modo (`/seudonimizar en`: el modo se pide en ese idioma);
+  si el caso empieza en esa misma línea, no hay código de idioma. Cada invocación decide su idioma: sin código
+  o con `es`, español.
+
+**Cómo añadir un idioma** (sin tocar `SKILL.md`):
+1. Copia `i18n-en.md` a `i18n-<código>.md` (código de 2 o 3 letras en minúscula) y cambia la
+   cabecera, la columna del idioma y el glosario. La columna `es:` no se edita: la genera
+   `python3 tools/extraer_es.py escribir`.
+2. Ejecuta `python3 tools/validar_i18n.py`: dice qué claves faltan o qué contrato se ha roto.
+3. Añade una fila en [docs/estado-traducciones.md](docs/estado-traducciones.md).
+4. Ejecuta `python3 -m unittest discover -s tests`.
+
+No hay que editar `SKILL.md`: los idiomas se descubren por los ficheros `i18n-*.md` junto a él.
 
 ## Novedades v1.1 — refuerzo anti-alucinación
 
@@ -165,6 +214,7 @@ El skill es texto Markdown. Cualquier asistente conversacional capaz de seguir i
    - `flujo.md`
    - `plantilla-tokens.md`
    - `auditoria.md` (si vas a usar el modo `audit`)
+   - `i18n-<código>.md` del idioma que quieras (si pides otro distinto del español)
 3. Añade al final: *«Sigue este protocolo. Espera mi caso.»*
 4. Invoca con `/seudonimizar [modo]` o describe el modo en lenguaje natural si la IA no soporta comandos de barra.
 
@@ -221,6 +271,10 @@ estructura de [Agent Plugins 1.0.0](https://agent-plugins.org/specification).
 - **[plantilla-entrada.md](skills/seudonimizador-clinico-juridico/plantilla-entrada.md)** — guía de formato de entrada para el usuario.
 - **[plantilla-tokens.md](skills/seudonimizador-clinico-juridico/plantilla-tokens.md)** — catálogo de roles y convenciones de etiquetado.
 - **[auditoria.md](skills/seudonimizador-clinico-juridico/auditoria.md)** — protocolo del modo `audit` y rúbrica de riesgo residual.
+- **`i18n-<código>.md`** (en [`skills/seudonimizador-clinico-juridico/`](skills/seudonimizador-clinico-juridico/)) — catálogos de traducción del marco de la salida, uno por idioma; `i18n-es.md` es la referencia generada del original.
+- **[docs/estado-traducciones.md](docs/estado-traducciones.md)** — quién ha escrito y quién ha revisado cada traducción.
+- **[docs/guia-web-github.md](docs/guia-web-github.md)** — guía paso a paso desde el navegador (comprobación automática, Pull Request, protección de rama).
+- **[AGENTS.md](AGENTS.md)** — reglas para quien modifique este repositorio, personas o agentes.
 - **[CHANGELOG.md](CHANGELOG.md)** — historial de versiones.
 - **[docs/](docs/)** — guía profesional en PDF (si está disponible).
 
@@ -230,6 +284,10 @@ estructura de [Agent Plugins 1.0.0](https://agent-plugins.org/specification).
 - No detecta automáticamente identificadores en imágenes, audio o vídeo. Solo texto.
 - La auditoría de riesgo residual es estimación cualitativa, no garantía formal.
 - La regla anti-alucinación de v1.1 reduce el riesgo de invención durante el parafraseo, pero no lo elimina por completo: las instrucciones explícitas en prompts tienden a funcionar, pero no son blindaje absoluto contra la alucinación en LLMs. Conviene auditar la salida con el modo `audit` cuando el caso es delicado.
+- Las **traducciones del marco** (`en`, `fr`, `ca`, `gl`, `eu`) son borradores de IA sin revisión humana; `eu` es **experimental**. No se ha ejecutado el skill con un idioma distinto del español en ninguna plataforma real. Los términos oficiales (RGPD) se comprobaron por búsqueda, no en el texto oficial.
+- Los **tokens** y los marcadores `[DATO_ELIMINADO]` y `[NO_CONSTA]` no se traducen: en un caso en otro idioma aparecerán palabras españolas entre corchetes.
+- El texto libre que el modelo redacta dentro del marco (justificaciones, decisiones por defecto) se genera en el momento en el idioma elegido y **no lo ha revisado nadie**; solo los literales fijos están en los catálogos.
+- El idioma solo se aplica al marco de la respuesta: el texto seudonimizado conserva el idioma del caso.
 - El mapa rol → token se entrega en la misma respuesta que el texto transformado. La separación efectiva (RGPD Art. 4.5) depende de que el usuario archive o destruya el mapa aparte.
 
 ## Licencia

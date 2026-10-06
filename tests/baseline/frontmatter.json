@@ -1,0 +1,10 @@
+{
+ "claves": [
+  "name",
+  "description"
+ ],
+ "name": "seudonimizador-clinico-juridico",
+ "description_sha256": "63754396c129c0a12a030eef55b12f118710a46c806d89081c87faf7eb1e756b",
+ "description_caracteres": 455,
+ "description_bytes": 468
+}

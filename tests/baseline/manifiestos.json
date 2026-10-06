@@ -1,0 +1,75 @@
+{
+ ".claude-plugin/marketplace.json": {
+  "description": "Seudonimiza casos clínicos y jurídicos para estudio, supervisión o formación: conserva la utilidad analítica y elimina identificadores directos, reduciendo los indirectos hasta un nivel auditado.",
+  "name": "seudonimizador-clinico-juridico",
+  "owner": {
+   "name": "Pablo",
+   "url": "https://mindandhealth.org"
+  },
+  "plugins": [
+   {
+    "category": "productivity",
+    "description": "Seudonimiza casos clínicos y jurídicos para estudio, supervisión o formación: conserva la utilidad analítica y elimina identificadores directos, reduciendo los indirectos hasta un nivel auditado. Cuatro modos (clínico, jurídico, generalización extrema y auditoría). No sustituye la anonimización formal que exigen el RGPD y la LOPDGDD.",
+    "homepage": "https://github.com/novanoticia/seudonimizador-clinico-juridico",
+    "keywords": [
+     "seudonimizacion",
+     "anonimizacion",
+     "clinico",
+     "juridico",
+     "rgpd"
+    ],
+    "name": "seudonimizador-clinico-juridico",
+    "source": "./"
+   }
+  ]
+ },
+ ".claude-plugin/plugin.json": {
+  "author": {
+   "name": "Pablo",
+   "url": "https://mindandhealth.org"
+  },
+  "description": "Seudonimiza casos clínicos y jurídicos para estudio, supervisión o formación: conserva la utilidad analítica y elimina identificadores directos, reduciendo los indirectos hasta un nivel auditado. Cuatro modos (clínico, jurídico, generalización extrema y auditoría). No sustituye la anonimización formal que exigen el RGPD y la LOPDGDD.",
+  "keywords": [
+   "seudonimizacion",
+   "anonimizacion",
+   "clinico",
+   "juridico",
+   "rgpd",
+   "lopdgdd",
+   "privacidad",
+   "supervision",
+   "formacion",
+   "psicologia",
+   "psiquiatria",
+   "derecho"
+  ],
+  "license": "CC-BY-4.0",
+  "name": "seudonimizador-clinico-juridico",
+  "repository": "https://github.com/novanoticia/seudonimizador-clinico-juridico"
+ },
+ "plugin.json": {
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "author": {
+   "name": "Pablo",
+   "url": "https://mindandhealth.org"
+  },
+  "description": "Seudonimiza casos clínicos y jurídicos para estudio, supervisión o formación: conserva la utilidad analítica y elimina identificadores directos, reduciendo los indirectos hasta un nivel auditado. Cuatro modos (clínico, jurídico, generalización extrema y auditoría). No sustituye la anonimización formal que exigen el RGPD y la LOPDGDD.",
+  "keywords": [
+   "seudonimizacion",
+   "anonimizacion",
+   "clinico",
+   "juridico",
+   "rgpd",
+   "lopdgdd",
+   "privacidad",
+   "supervision",
+   "formacion",
+   "psicologia",
+   "psiquiatria",
+   "derecho"
+  ],
+  "license": "CC-BY-4.0",
+  "name": "seudonimizador-clinico-juridico",
+  "repository": "https://github.com/novanoticia/seudonimizador-clinico-juridico"
+ }
+}

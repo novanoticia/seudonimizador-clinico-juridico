@@ -1,0 +1,35 @@
+name: Verificación
+
+# Corre las mismas comprobaciones que se ejecutan en local. Por sí solo este workflow
+# SOLO AVISA (marca el PR en verde o en rojo); para que un rojo impida fusionar hay que
+# activar una protección de rama que exija el check `verificar`. Ver docs/guia-web-github.md.
+
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verificacion-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verificar:
+    name: verificar
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Historial completo: las pruebas comparan el español con `git show <commit base>`.
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python3 -m unittest discover -s tests -v
+      - run: python3 tools/validar_i18n.py
+      - run: python3 tools/extraer_es.py comprobar
+      - run: python3 tools/linea_base.py comparar

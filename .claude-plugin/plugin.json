@@ -1,6 +1,6 @@
 {
   "name": "seudonimizador-clinico-juridico",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Seudonimiza casos clínicos y jurídicos para estudio, supervisión o formación: conserva la utilidad analítica y elimina identificadores directos, reduciendo los indirectos hasta un nivel auditado. Cuatro modos (clínico, jurídico, generalización extrema y auditoría). No sustituye la anonimización formal que exigen el RGPD y la LOPDGDD.",
   "author": {
     "name": "Pablo",
