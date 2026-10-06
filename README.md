@@ -77,7 +77,9 @@ idioma), los tokens (`[PACIENTE_A]`…), `[DATO_ELIMINADO]` y `[NO_CONSTA]`, los
 - Si la plataforma cargó **solo `SKILL.md`** y no los catálogos, el skill **responde en español**, lo
   dice en una frase y no inventa la traducción.
 - El código solo se reconoce si la primera línea tiene exactamente tres elementos
-  (`/seudonimizar`, modo y código); si el caso empieza en esa misma línea, no hay código de idioma.
+  (`/seudonimizar`, modo y código), o dos si falta el modo (`/seudonimizar en`: el modo se pide en ese idioma);
+  si el caso empieza en esa misma línea, no hay código de idioma. Cada invocación decide su idioma: sin código
+  o con `es`, español.
 
 **Cómo añadir un idioma** (sin tocar `SKILL.md`):
 1. Copia `i18n-en.md` a `i18n-<código>.md` (código de 2 o 3 letras en minúscula) y cambia la
@@ -284,6 +286,7 @@ estructura de [Agent Plugins 1.0.0](https://agent-plugins.org/specification).
 - La regla anti-alucinación de v1.1 reduce el riesgo de invención durante el parafraseo, pero no lo elimina por completo: las instrucciones explícitas en prompts tienden a funcionar, pero no son blindaje absoluto contra la alucinación en LLMs. Conviene auditar la salida con el modo `audit` cuando el caso es delicado.
 - Las **traducciones del marco** (`en`, `fr`, `ca`, `gl`, `eu`) son borradores de IA sin revisión humana; `eu` es **experimental**. No se ha ejecutado el skill con un idioma distinto del español en ninguna plataforma real. Los términos oficiales (RGPD) se comprobaron por búsqueda, no en el texto oficial.
 - Los **tokens** y los marcadores `[DATO_ELIMINADO]` y `[NO_CONSTA]` no se traducen: en un caso en otro idioma aparecerán palabras españolas entre corchetes.
+- El texto libre que el modelo redacta dentro del marco (justificaciones, decisiones por defecto) se genera en el momento en el idioma elegido y **no lo ha revisado nadie**; solo los literales fijos están en los catálogos.
 - El idioma solo se aplica al marco de la respuesta: el texto seudonimizado conserva el idioma del caso.
 - El mapa rol → token se entrega en la misma respuesta que el texto transformado. La separación efectiva (RGPD Art. 4.5) depende de que el usuario archive o destruya el mapa aparte.
 

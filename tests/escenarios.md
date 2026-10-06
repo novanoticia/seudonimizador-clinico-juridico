@@ -70,7 +70,32 @@ espera que pregunte **en francés** por la mediación y se detenga, sin procesar
 
 ## Ronda 1
 
-**Estado: preparada y todavía sin ejecutar.** Se completará con los resultados, los hallazgos y las decisiones.
+**Estado: ejecutada** (10 simuladores de contexto limpio, uno por escenario; S7 con un paquete que solo
+contiene `SKILL.md`). Es una simulación, **no una plataforma real**.
+
+**Resultado automático (criterios preregistrados):** 191 de 192 criterios pasan; ningún crítico falla. El único
+fallo (S5, deseable, «no menciona idiomas ni catálogos») era un **falso positivo del criterio**: la respuesta
+decía «el token del catálogo» (el catálogo de tokens del skill, no de idiomas). Se corrigió el criterio
+**después de ver el resultado** (cambio posterior, no preregistrado), y su ejemplo OK/KO lo comprueba.
+
+**Hallazgos de los simuladores (leyendo respuestas y notas) y decisión:**
+
+| Hallazgo | Escenarios | Decisión |
+|---|---|---|
+| Sin salida estructurada (pregunta de puerta) no había dónde poner el aviso de traducción | S6, S10 | Corregido: el aviso se añade también tras una pregunta de puerta. Test añadido antes del cambio. |
+| El aviso de código desconocido se colocó como «comentario adicional» al final | S4 | Corregido: va al principio, antes de `## APERTURA`. |
+| El texto libre del marco (justificaciones) lo genera el modelo en el momento y no lo ha revisado nadie | S3 y otros | Declarado en flujo.md, README, CHANGELOG, texto de la Release y estado de traducciones. |
+
+**Revisión independiente de la rama** (un subagente con instrucciones de solo lectura, mutantes sobre una copia):
+0 críticos, 7 importantes, 9 menores. Corregidos con test previo: I1 (forma de la primera línea, también de dos
+elementos), I2 (el idioma lo decide cada invocación), I3 (regla 4 y alcance de la precedencia), I4 (listas
+`lista.*` y veredictos traducidos), I6 (aviso en puertas, ver arriba), I7 (mutantes no detectados: locale, carga del
+catálogo, puertas truncadas). I5 (euskera, interrogativa negativa) **no se cambia**: es un riesgo señalado, no un
+error confirmado, y alterar la polaridad cambiaría el contrato con el original; queda anotado como pendiente de
+revisión nativa.
+
+**Límites de esta ronda:** los cambios derivados de los hallazgos se verificaron con pruebas automáticas, **no se
+han vuelto a simular** (no hay Ronda 2). El revisor y los simuladores son modelos: no equivalen a una revisión humana.
 
 ## Ejecuciones en plataformas reales
 
@@ -87,4 +112,15 @@ resultado, el comportamiento con idiomas distintos del español no está comprob
 
 ## Pendientes menores
 
-*(se rellenan al cerrar la ronda)*
+- Claves de catálogo para las puertas de `auditoria.md` y la de finalidad secundaria de `SKILL.md` (hoy las redacta
+  el modelo): añadiría frases de seguridad nuevas, sin revisar, en seis idiomas. (I6, parte restante)
+- Euskera: `fidelidad.pregunta` como interrogativa negativa. Revisión nativa. (I5)
+- Menores de la revisión: «regenerate» en conversaciones fr/ca (M4); si el aviso se repite al iterar (M5);
+  `i18n-es.md` viaja en el paquete aunque no se carga y `build-dist.sh` copia cualquier `.md` nuevo (M6); las
+  pruebas dependen de git con historial completo (M7, el CI lo cubre); workflow duplica `push`/`pull_request`,
+  acciones fijadas por etiqueta y una prueba tautológica (M8); README «v1.5» y enlaces `releases/latest` hasta que
+  haya Release, y CHANGELOG con dos secciones sin publicar (M9); exención de tokens en comprobación 6 solo con
+  código (M3); casos como `pt-BR` o código vacío (M2).
+- Ambigüedades **ya presentes en el original** que los simuladores señalaron y no se tocan (alteran el skill en
+  español): fechas solo con mes, token para pueblos pequeños, dos formatos de línea del mapa, orden APERTURA/MAPA,
+  rúbrica de riesgo, amplitud de rangos, `[CONVIVIENTE_A]`, elección de token en derivaciones.

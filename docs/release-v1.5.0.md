@@ -13,7 +13,7 @@ Seudonimizador clínico-jurídico: skill que seudonimiza casos clínicos (psicol
 - Verificación automática (pruebas, validador de catálogos, comparación con la línea base) y un CI en GitHub Actions.
 
 ### Cambiado
-- Solo **adiciones** delimitadas en `SKILL.md`, `flujo.md` y `auditoria.md`: 40 líneas añadidas y 0 eliminadas. El frontmatter y la `description` no se tocan.
+- Solo **adiciones** delimitadas en `SKILL.md`, `flujo.md` y `auditoria.md`: 45 líneas añadidas y 0 eliminadas. El frontmatter y la `description` no se tocan.
 - Los paquetes de esta Release incluyen los catálogos de idioma.
 
 ### Sin cambios
@@ -25,7 +25,8 @@ Seudonimizador clínico-jurídico: skill que seudonimiza casos clínicos (psicol
 
 - `en`, `fr`, `ca` y `gl`: **borradores de IA, sin revisión humana**.
 - `eu` (euskera): **experimental**. Es el idioma de mayor riesgo de error y ninguna comprobación automática puede detectarlo; su aviso final es más fuerte y bilingüe (euskera y español). Revisión por una persona nativa **imprescindible** antes de usarlo con casos reales.
-- **No se ha ejecutado el skill con un idioma distinto del español en ninguna plataforma real.** Lo verificado es automático (pruebas y validadores), no el comportamiento de un modelo.
+- **No se ha ejecutado el skill con un idioma distinto del español en ninguna plataforma real.** Lo verificado es automático (pruebas y validadores) y una simulación con subagentes (`tests/escenarios.md`), que no equivale a ninguna plataforma real.
+- El texto libre que el modelo redacta dentro del marco (justificaciones, decisiones por defecto) se genera en el momento y **no lo ha revisado nadie**; solo los literales fijos están en los catálogos.
 - Los términos oficiales (RGPD) se comprobaron por búsqueda web, **no** en el texto oficial de EUR-Lex, que no era accesible desde el entorno de desarrollo.
 - Si la plataforma carga **solo `SKILL.md`** y no los catálogos, el skill responde en español y lo dice: no inventa la traducción.
 - Los tokens (`[PACIENTE_A]`…) y los marcadores `[DATO_ELIMINADO]` y `[NO_CONSTA]` no se traducen: en un caso en otro idioma verás palabras españolas entre corchetes.

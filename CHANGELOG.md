@@ -29,7 +29,7 @@ Multiidioma: el marco de la respuesta puede salir en otro idioma, sin cambiar na
 ### Cambiado
 
 - Cambios al original: **solo adiciones, delimitadas** por `<!-- i18n:inicio -->` y `<!-- i18n:fin -->`;
-  ninguna línea reescrita ni eliminada (`git diff --numstat`: 40 líneas añadidas, 0 eliminadas):
+  ninguna línea reescrita ni eliminada (`git diff --numstat`: 45 líneas añadidas, 0 eliminadas):
   - `SKILL.md`: bloque «Idioma de la respuesta» y una línea en «Archivos del skill».
   - `flujo.md`: bloque «Idioma de la salida», tras la plantilla del paso 5.
   - `auditoria.md`: bloque «Idioma de la salida del modo `audit`», que además aclara que los tokens y los
@@ -47,9 +47,12 @@ Multiidioma: el marco de la respuesta puede salir en otro idioma, sin cambiar na
 - **Las traducciones son borradores de IA, sin revisión humana**, y contienen frases de seguridad y de
   contenido clínico y jurídico. `eu` es **experimental**, de alto riesgo: ninguna comprobación automática
   puede detectar un error de traducción en euskera. Estado detallado en `docs/estado-traducciones.md`.
-- **No se ha ejecutado el skill con un idioma distinto del español en ninguna plataforma real**, ni se ha
-  simulado todavía con subagentes. Lo verificado es automático: pruebas, validadores y comparación con la
-  línea base.
+- **No se ha ejecutado el skill con un idioma distinto del español en ninguna plataforma real**, sino solo
+  una **simulación** con subagentes de contexto limpio (10 escenarios, ver `tests/escenarios.md`), que no
+  equivale a una plataforma real. Lo verificado es automático (pruebas, validadores, comparación con la
+  línea base) y simulado.
+- El texto libre que el modelo redacta dentro del marco (justificaciones, decisiones por defecto) se genera en
+  el momento en el idioma elegido: **no está en el catálogo y no lo ha revisado nadie**.
 - Los **términos oficiales** (RGPD) se comprobaron por búsqueda web, no abriendo el texto oficial: EUR-Lex
   sirve un desafío anti-bots que impide leerlo desde el entorno de desarrollo. El catalán, el gallego y el
   euskera no son lenguas oficiales de la UE, así que no hay RGPD oficial en ellas (hecho conocido, no
@@ -58,7 +61,8 @@ Multiidioma: el marco de la respuesta puede salir en otro idioma, sin cambiar na
   español y lo dice (fallo seguro).
 - Los tokens y los marcadores `[DATO_ELIMINADO]` y `[NO_CONSTA]` no se traducen: en un caso en otro idioma
   aparecerán palabras españolas entre corchetes.
-- El código de idioma solo se reconoce con la primera línea de exactamente tres elementos.
+- El código de idioma solo se reconoce con la primera línea de exactamente tres elementos (o dos, si falta el modo). Cada invocación del comando
+  decide su idioma; solo los mensajes de seguimiento conservan el anterior.
 
 ## [Sin publicar]
 

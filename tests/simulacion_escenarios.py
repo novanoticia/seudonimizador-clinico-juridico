@@ -257,7 +257,8 @@ def _s5():  # línea base: sin código
         + [casa("nivel de riesgo en español", r"(?im)^\W*Nivel:\W*(bajo|medio|alto)\b",
                 ok="- Nivel: bajo", ko="- Level: low"),
            casa("tokens clínicos", r"\[PACIENTE_[A-Z]\]", ok="[PACIENTE_A]", ko="[PATIENT_A]"),
-           no_casa("no menciona idiomas ni catálogos", r"(?i)\bcat[aá]logo|i18n", ok="texto", ko="catálogo",
+           no_casa("no menciona idiomas ni catálogos", r"(?i)\bcat[aá]logos? de (idiomas?|traducci|i18n)|i18n|\bidioma",
+                   ok="el token del catálogo de tokens", ko="catálogo de idiomas",
                    critica=False)]
         + texto_limpio_y_en_castellano("es", NOMBRES_CLINICO))
 

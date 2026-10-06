@@ -54,15 +54,15 @@ Si el usuario no especifica modo, se pide aclaración. No hay modo por defecto: 
 <!-- i18n:inicio -->
 ### Idioma de la respuesta (opcional)
 
-Sin más indicación, todo funciona como se describe arriba, en español. Para que el marco de la respuesta (encabezados, etiquetas, veredictos, preguntas y avisos) salga en otro idioma, la **primera línea** debe tener exactamente tres elementos: `/seudonimizar`, el modo y un código de idioma, y el caso empieza en la línea siguiente. Ejemplos: `/seudonimizar A en`, `/seudonimizar audit fr`. Si falta el modo, vale `/seudonimizar en` y el modo se pide en ese idioma. Si el caso empieza en esa misma línea, no hay código de idioma.
+Sin más indicación, todo funciona como se describe arriba, en español. Para que el marco de la respuesta (encabezados, etiquetas, veredictos, preguntas y avisos) salga en otro idioma, la **primera línea** debe tener exactamente tres elementos: `/seudonimizar`, el modo y un código de idioma, y el caso empieza en la línea siguiente. Ejemplos: `/seudonimizar A en`, `/seudonimizar audit fr`. Sin modo son dos elementos, `/seudonimizar en`: el último es el código y se pide el modo en ese idioma (`/seudonimizar xx` es un código desconocido, ver abajo). Si el caso empieza en esa misma línea, no hay código de idioma.
 
-- **Códigos.** Acepta mayúsculas y formas de locale (`EN`, `en-US`, `ca_ES`, `fr_FR.UTF-8`): usa solo las letras iniciales, en minúscula. `es` equivale a no poner código.
+- **Códigos.** Acepta mayúsculas y formas de locale (`EN`, `en-US`, `ca_ES`, `fr_FR.UTF-8`): toma lo anterior al primer `-`, `_` o `.`, en minúscula; si no son 2 o 3 letras, no es un código. `es` equivale a no poner código.
 - **Catálogos.** Cada idioma disponible tiene un fichero `i18n-<código>.md` junto a este (si el skill se pegó como texto, las secciones `# i18n-<código>`). Con un código válido, cárgalo antes de responder. Sin código, no cargues ningún catálogo y no cambies nada: rige lo descrito arriba.
 - **Qué cambia.** Solo el marco: cada literal en español de las plantillas se sustituye por su traducción del catálogo; las instrucciones entre corchetes no son literales, redacta su contenido en el idioma elegido. No se traducen el texto del caso (conserva su idioma), los tokens (`[PACIENTE_A]`), `[DATO_ELIMINADO]`, `[NO_CONSTA]`, los modos, los nombres de fichero ni el comando.
-- **Código desconocido** (2 o 3 letras, con región opcional, sin catálogo): avisa en español —«Idioma "xx" no disponible. Idiomas disponibles: …», con los que sí tienes— y continúa en español.
+- **Código desconocido** (2 o 3 letras, con región opcional, sin catálogo): avisa en español —«Idioma "xx" no disponible. Idiomas disponibles: …», con los que sí tienes— y continúa en español. Ese aviso va al principio de la respuesta, antes de `## APERTURA`; no es un comentario adicional.
 - **Sin catálogo a mano** (solo has cargado este fichero): responde en español, dilo en una frase y añade la línea siguiente. No inventes la traducción del marco.
   > [es] Traducción no disponible: respondo en español. · [en] Translation not available: replying in Spanish. · [fr] Traduction indisponible : réponse en espagnol. · [ca] Traducció no disponible: responc en castellà. · [gl] Tradución non dispoñible: respondo en castelán. · [eu] Itzulpena ez dago eskuragarri: gaztelaniaz erantzuten dut.
-- El idioma elegido se mantiene en la conversación hasta que se invoque con otro código.
+- Cada invocación de `/seudonimizar` decide su idioma: sin código o con `es`, español. Solo los mensajes de seguimiento (sin comando) conservan el idioma anterior.
 <!-- i18n:fin -->
 
 ## Para qué NO sirve

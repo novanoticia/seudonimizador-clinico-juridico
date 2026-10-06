@@ -114,6 +114,7 @@ Rige lo mismo que en `flujo.md` (bloque «Idioma de la salida»): el marco sale 
 
 - Tras el bloque «Si quieres regenerar» añade la sección `## AVISO DE TRADUCCIÓN` con `aviso.traduccion`, solo cuando el idioma no es el español.
 - «Regenerar»: acepta como petición tanto `regenerar` como la palabra equivalente que figura entre comillas en la entrada `regenerar.texto` del catálogo cargado.
+- Los veredictos y niveles (`lista.*`) se interpretan por equivalencia con los del catálogo: «Duda», «alto» o «Pasa» valen aunque vuelvan traducidos.
 - En la comprobación 6 (idiomas mezclados), los tokens y los marcadores `[DATO_ELIMINADO]` y `[NO_CONSTA]` son vocabulario fijo y no cuentan como mezcla de idiomas. Cualquier otro resto en otro idioma sigue contando.
 <!-- i18n:fin -->
 

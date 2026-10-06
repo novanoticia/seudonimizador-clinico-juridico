@@ -82,6 +82,12 @@ Los términos continúan **sin comprobar en el texto oficial**.
 - **ca**, **gl**, **eu**: hablante nativo con formación jurídica o sanitaria. Para `eu` es
   **imprescindible** antes de usarlo con casos reales: ninguna prueba automática puede
   detectar un error de traducción en euskera.
+- Riesgo señalado por la revisión independiente (no confirmado como error): en `eu`, la pregunta de fidelidad
+  (`fidelidad.pregunta`) es una interrogativa negativa con respuesta `bai / ez`, forma que puede ser ambigua en
+  euskera; su inversión escondería una invención. No se ha cambiado la polaridad (alteraría el contrato con el
+  original en español). Pendiente de revisión nativa.
+- Las preguntas de puerta de `auditoria.md` y la de finalidad secundaria de `SKILL.md` no tienen clave de
+  catálogo: el modelo las redacta en el momento, sin revisar (ver «texto libre» en el README).
 
 ---
 *Elaborado con asistencia de IA; requiere revisión humana.*

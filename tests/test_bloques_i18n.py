@@ -139,6 +139,11 @@ class ContenidoDelBloquePrincipal(unittest.TestCase):
             with self.subTest(fragmento):
                 self.assertIn(fragmento, self.b)
 
+    def test_formas_de_locale_y_carga_obligatoria_del_catalogo(self):
+        # Revisión I7: mutantes que la suite no detectaba.
+        self.assertIn("Acepta mayúsculas y formas de locale", self.b)
+        self.assertIn("cárgalo antes de responder", self.b)
+
     def test_sin_codigo_no_cambia_nada(self):
         self.assertIn("no cargues ningún catálogo", self.b)
 
@@ -157,8 +162,19 @@ class ContenidoDelBloquePrincipal(unittest.TestCase):
             with self.subTest(fragmento):
                 self.assertIn(fragmento, self.b)
 
-    def test_el_idioma_persiste_en_la_conversacion(self):
-        self.assertIn("se mantiene en la conversación", self.b)
+    def test_el_idioma_persiste_solo_en_los_mensajes_de_seguimiento(self):
+        # Revisión I2: cada invocación del comando decide su idioma; sin código o con `es` = español.
+        self.assertRegex(self.b, r"(?is)cada invocación de `/seudonimizar` decide su idioma.{0,120}sin código o con `es`.{0,40}español")
+        self.assertRegex(self.b, r"(?is)solo los mensajes de seguimiento.{0,80}(sin comando).{0,80}conservan")
+
+    def test_una_sola_regla_para_la_forma_de_la_primera_linea(self):
+        # Revisión I1: el modo se pide cuando falta y la excepción `/seudonimizar en` está en la regla, no contra ella.
+        self.assertRegex(self.b, r"(?is)dos elementos.{0,80}`/seudonimizar en`.{0,120}(pide|pregunta) el modo")
+        self.assertRegex(self.b, r"(?is)`/seudonimizar xx`.{0,160}(desconocido|no disponible)")
+
+    def test_codigo_con_forma_de_locale_se_reduce_antes_del_primer_separador(self):
+        # Revisión M1: «eng», «cat», «Español» no son códigos; se toma lo anterior a `-`, `_` o `.`.
+        self.assertRegex(self.b, r"(?i)lo anterior al primer `-`, `_` o `\.`")
 
     def test_linea_multilingue_de_respaldo_con_los_seis_idiomas(self):
         m = re.search(r"^\s*> (\[es\].*)$", self.b, re.M)
@@ -206,9 +222,41 @@ class ContenidoDeLosOtrosBloques(unittest.TestCase):
         b = bloques_de("auditoria.md")[0][2]
         self.assertRegex(b, r"(?i)cualquier otro resto en otro idioma sigue contando")
 
+    def test_flujo_la_regla_4_se_conserva_en_funcion_y_la_precedencia_se_limita_a_la_6(self):
+        # Revisión I3: la traducción del encabezado del mapa respeta la regla 4; la precedencia es solo sobre la 6.
+        b = bloques_de("flujo.md")[0][2]
+        self.assertRegex(b, r"(?i)regla 4.{0,160}`encabezado\.mapa`")
+        self.assertIn("prevalece sobre la regla 6 en lo que toca al idioma de las notas", b)
+        self.assertRegex(b, r"(?i)no .{0,40}(regla 1|no inventar)|las demás reglas duras siguen rigiendo")
+
+    def test_flujo_las_listas_de_opciones_no_son_instrucciones(self):
+        # Revisión I4.
+        b = bloques_de("flujo.md")[0][2]
+        self.assertRegex(b, r"(?is)`lista\.\*`.{0,200}(tal cual|sin reformular).{0,120}(una opción|una sola opción)")
+
+    def test_auditoria_interpreta_veredictos_traducidos_por_equivalencia(self):
+        # Revisión I4.
+        b = bloques_de("auditoria.md")[0][2]
+        self.assertRegex(b, r"(?is)veredictos.{0,200}equivalencia.{0,120}catálogo")
+
     def test_flujo_mantiene_el_idioma_al_iterar_o_regenerar(self):
         b = bloques_de("flujo.md")[0][2]
         self.assertRegex(b, r"(?i)al iterar o regenerar \(paso 6\), mantén el mismo idioma")
+
+    def test_el_aviso_de_traduccion_tambien_acompana_a_las_preguntas_de_las_puertas(self):
+        # Hallazgo de la ronda 1 (S6, S10): sin salida estructurada no había dónde poner el aviso.
+        b = bloques_de("flujo.md")[0][2]
+        self.assertRegex(b, r"(?i)si respondes solo con una pregunta de puerta.{0,120}añade.{0,80}`aviso\.traduccion`")
+
+    def test_el_aviso_de_codigo_desconocido_va_al_principio_de_la_respuesta(self):
+        # Hallazgo de la ronda 1 (S4): no era un comentario adicional del paso 6.
+        b = bloques_de("SKILL.md")[0][2]
+        self.assertRegex(b, r"(?is)desconocido.{0,500}(al principio|primeras líneas|antes de)")
+        self.assertRegex(b, r"(?is)desconocido.{0,700}no es un comentario adicional")
+
+    def test_el_texto_libre_del_marco_se_declara_generado_y_sin_revisar(self):
+        b = bloques_de("flujo.md")[0][2]
+        self.assertRegex(b, r"(?is)(justificaciones|texto libre).{0,300}(sin revisar|no están revisad|no revisad)")
 
     def test_los_encabezados_de_los_bloques_son_los_que_se_citan_entre_si(self):
         # auditoria.md remite al «bloque «Idioma de la salida»» de flujo.md.
@@ -288,6 +336,29 @@ class EntradasNuevasDeLaReferencia(unittest.TestCase):
         t = (SKILL / "i18n-es.md").read_text(encoding="utf-8")
         for k in NUEVOS_ESPERADOS:
             self.assertIn(f"### {k}\norigen: nuevo\nseguridad: sí\nes: ", t)
+
+
+class PuertasTraducidasNoSeTruncan(unittest.TestCase):
+    """Revisión I7: truncar una puerta en un idioma no la detectaba ningún test."""
+
+    @staticmethod
+    def _campo(codigo, clave):
+        t = (SKILL / f"i18n-{codigo}.md").read_text(encoding="utf-8")
+        m = re.search(rf"^### {re.escape(clave)}\n(?:.*\n)*?{codigo}: (.*)$", t, re.M)
+        assert m, (codigo, clave)
+        return m.group(1)
+
+    def test_longitud_comparable_y_estructura(self):
+        for c in ("en", "fr", "ca", "gl", "eu"):
+            for k in ("puerta.ficticio", "puerta.sin_mediacion", "puerta.modo"):
+                with self.subTest(f"{c} {k}"):
+                    es, tr = self._campo("es", k), self._campo(c, k)
+                    self.assertGreaterEqual(len(tr), 0.6 * len(es))
+                    if "?" in es:
+                        self.assertIn("?", tr)
+                    if k == "puerta.modo":
+                        for x in ("A", "B", "C", "audit"):
+                            self.assertIn(x, tr)
 
 
 if __name__ == "__main__":

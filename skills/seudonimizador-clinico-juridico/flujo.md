@@ -149,8 +149,12 @@ Aplica únicamente cuando `SKILL.md` te ha hecho cargar un catálogo `i18n-<cód
 
 - Con código, el marco va en el idioma elegido aunque el caso esté en otro: esto prevalece sobre la regla 6 en lo que toca al idioma de las notas. La transformación del caso sigue en el idioma del caso (no se traduce). Lo que escribas fuera de ella (justificaciones, decisiones por defecto, preguntas de las puertas) va en el idioma elegido.
 - Reproduce la estructura anterior sustituyendo cada literal en español por su traducción del catálogo (columna `es` → columna del idioma). Lo que va entre corchetes como instrucción no es un literal: redáctalo tú en el idioma elegido. Para las preguntas de las puertas de entrada usa las frases `puerta.*` del catálogo, en vez de improvisarlas.
+- Regla 4: se conserva su función, no su literal; el encabezado del mapa se traduce con `encabezado.mapa`. Las demás reglas duras siguen rigiendo (también no inventar).
+- Las listas de opciones entre corchetes (`lista.*`) no son instrucciones: copia la entrada del catálogo tal cual, sin reformular, y elige una sola opción.
 - No se traducen los tokens, `[DATO_ELIMINADO]` ni `[NO_CONSTA]`, los modos ni los nombres de fichero.
 - Tras `## DECISIONES POR DEFECTO` añade la sección `## AVISO DE TRADUCCIÓN` (su traducción está en `encabezado.aviso_traduccion`) con el texto de `aviso.traduccion`, solo cuando el idioma elegido no es el español. Es una sección más de este paso 5, no es un comentario adicional del paso 6.
+- Si respondes solo con una pregunta de puerta (sin salida estructurada), añade al final el texto de `aviso.traduccion` (sin encabezado), para que el usuario sepa que está leyendo una traducción sin revisar.
+- Las justificaciones y demás texto libre que redactas dentro del marco los generas tú en el momento, en el idioma elegido: no están revisados por ninguna persona, a diferencia de los literales del catálogo, que sí son un borrador fijo.
 - Al iterar o regenerar (paso 6), mantén el mismo idioma.
 <!-- i18n:fin -->
 
