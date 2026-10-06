@@ -258,11 +258,156 @@ class CatalogoFrances(unittest.TestCase):
                 self.assertNotRegex(traducciones("fr")[clave], r"(?i)\b(tu|ton|ta|tes|toi)\b")
 
 
+class PruebasComunes:
+    """Comprobaciones compartidas por los catálogos nuevos (ca, gl, eu…).
+
+    Cada clase concreta define sus parámetros; esto evita copiar el bloque por
+    idioma. Los idiomas ya cerrados (en, fr) mantienen sus clases propias."""
+    CODIGO = None
+    SEGURIDAD = {}                    # clave -> traducción fijada (tripwire)
+    ORDEN_GRAVEDAD = []               # [(clave, regex exacta)]
+    VALORES_FIJOS = {}                # clave -> traducción exacta
+    AVISO = []                        # regex que debe cumplir aviso.traduccion
+    RE_CARACTERES_ES = r"[áñ¿¡]"      # caracteres que NO existen en el idioma
+    RE_PALABRAS_ES = r"\b(los|las|para|por|con|sin|uno)\b"
+    # «y» conjunción: solo minúscula («Y» mayúscula es la variable de «Persona Y»).
+    RE_CONJUNCION_ES = r"(?<!’)\by\b"
+    RE_PALABRAS_EN = r"\b(the|and|of|for|with|is|if|any)\b"
+    COGNADOS = {"token", "tokens", "audit", "original", "skill"}
+
+    def trad(self):
+        return traducciones(self.CODIGO)
+
+    def test_existe_y_valida(self):
+        self.assertTrue((SKILL / f"i18n-{self.CODIGO}.md").is_file(), f"falta i18n-{self.CODIGO}.md")
+        self.assertEqual(v.validar_arbol_real(), [])
+
+    def test_tiene_todas_las_claves_de_la_referencia(self):
+        cats = catalogos()
+        self.assertEqual(set(cats[self.CODIGO]["entradas"]), set(cats["es"]["entradas"]))
+
+    def test_las_frases_de_seguridad_son_las_revisadas(self):
+        for clave, esperado in self.SEGURIDAD.items():
+            with self.subTest(clave):
+                self.assertEqual(self.trad()[clave], esperado)
+
+    def test_se_fijan_exactamente_las_diez_frases_de_seguridad_del_original(self):
+        self.assertEqual(set(self.SEGURIDAD), set(SEGURIDAD_EN))
+
+    def test_el_orden_de_las_listas_de_gravedad_se_conserva(self):
+        for clave, regex in self.ORDEN_GRAVEDAD:
+            with self.subTest(clave):
+                self.assertRegex(self.trad()[clave], regex)
+
+    def test_sin_restos_de_espanol(self):
+        for clave, texto in self.trad().items():
+            with self.subTest(clave):
+                self.assertNotRegex(sin_contrato(texto), self.RE_CARACTERES_ES)
+
+    def test_sin_palabras_funcionales_exclusivas_del_espanol(self):
+        for clave, texto in self.trad().items():
+            with self.subTest(clave):
+                self.assertIsNone(re.search(self.RE_PALABRAS_ES, sin_contrato(texto), re.I), texto)
+                self.assertIsNone(re.search(self.RE_CONJUNCION_ES, sin_contrato(texto)), texto)
+
+    def test_sin_restos_de_ingles(self):
+        for clave, texto in self.trad().items():
+            with self.subTest(clave):
+                self.assertIsNone(re.search(self.RE_PALABRAS_EN, sin_contrato(texto), re.I), texto)
+
+    def test_no_se_deja_sin_traducir_ninguna_palabra_del_literal_espanol(self):
+        for clave, e in catalogos()[self.CODIGO]["entradas"].items():
+            with self.subTest(clave):
+                es = set(re.findall(r"[^\W\d_]{4,}", sin_contrato(e["es"]).lower()))
+                tr = set(re.findall(r"[^\W\d_]{4,}", sin_contrato(e[self.CODIGO]).lower()))
+                self.assertEqual((es & tr) - self.COGNADOS, set())
+
+    def test_sin_apostrofos_ni_comillas_rectas(self):
+        for clave, texto in self.trad().items():
+            with self.subTest(clave):
+                self.assertNotIn("'", texto)
+                self.assertNotIn('"', texto)
+
+    def test_las_comillas_angulares_van_balanceadas_y_sin_espacios_dentro(self):
+        for clave, texto in self.trad().items():
+            with self.subTest(clave):
+                self.assertEqual(texto.count("«"), texto.count("»"))
+                self.assertNotIn("« ", texto)
+                self.assertNotIn(" »", texto)
+
+    def test_valores_fijos(self):
+        for clave, esperado in self.VALORES_FIJOS.items():
+            with self.subTest(clave):
+                self.assertEqual(self.trad()[clave], esperado)
+
+    def test_el_aviso_remite_al_espanol_y_dice_que_no_esta_revisado(self):
+        t = self.trad()["aviso.traduccion"]
+        for regex in self.AVISO:
+            with self.subTest(regex):
+                self.assertRegex(t, regex)
+
+    def test_la_palabra_de_regenerar_va_entre_comillas_angulares(self):
+        self.assertRegex(self.trad()["regenerar.texto"], r"«[^»]+»")
+
+
+# ── catalán ──
+SEGURIDAD_CA = {
+    "encabezado.mapa": "## MAPA — arxivar o destruir per separat del text",
+    "encabezado.riesgo": "## AUDITORIA DEL RISC RESIDUAL",
+    "encabezado.riesgo_estimado": "### Risc residual estimat",
+    "lista.nivel": "[baix / mitjà / alt]",
+    "encabezado.fidelidad": "## CONTROL DE FIDELITAT",
+    "fidelidad.pregunta": "Hi ha algun element del text pseudonimitzat sense correspondència a l’original?",
+    "lista.si_no": "[sí / no]",
+    "lista.veredicto": "[Passa / Falla / Dubte]",
+    "lista.veredicto_fidelidad": "[Passa / Falla / Dubte / No aplicable]",
+    "lista.recomendacion":
+        "[apte per a ús secundari intern / requereix correcció abans de l’ús / "
+        "passar al mode C / fragmentar i tornar a pseudonimitzar parts / "
+        "no apte sense revisió humana experta]",
+}
+
+
+class CatalogoCatala(PruebasComunes, unittest.TestCase):
+    CODIGO = "ca"
+    SEGURIDAD = SEGURIDAD_CA
+    ORDEN_GRAVEDAD = [
+        ("lista.nivel", r"^\[baix / mitjà / alt\]$"),
+        ("lista.veredicto", r"^\[Passa / Falla / Dubte\]$"),
+        ("lista.veredicto_fidelidad", r"^\[Passa / Falla / Dubte / No aplicable\]$"),
+    ]
+    VALORES_FIJOS = {"unidad.dias": "+N dies", "valor.ninguna": "cap",
+                     "lista.modos": "[A | B | C]"}
+    AVISO = [r"(?i)traduït per una IA", r"(?i)sense revisió humana", r"(?i)versió en castellà"]
+    # En catalán son válidos à è é í ò ó ú ï ü ç y l·l; no existen á ñ ¿ ¡.
+    RE_CARACTERES_ES = r"[áñ¿¡]"
+    # Palabras idénticas en catalán y español, juzgadas una a una (tarea 7). Es una lista
+    # larga porque las lenguas son hermanas; su coste: una palabra española que coincida
+    # con ellas no se detecta por esta vía (solo la revisión humana lo haría).
+    COGNADOS = PruebasComunes.COGNADOS | {
+        "regenerar", "global", "control", "residual", "mode",
+        "aplicable", "casos", "clínica", "combinada", "consulta", "destruir", "experta",
+        "extrema", "fragmentar", "funcional", "humana", "identificadores", "indica",
+        "interna", "jurídica", "mapa", "persona", "recuperables", "sobre", "temporal",
+    }
+
+    def test_punt_volat_correcto(self):
+        # «l·l» con punto medio (U+00B7), no «l.l» ni «l-l».
+        for clave, texto in self.trad().items():
+            with self.subTest(clave):
+                self.assertNotRegex(texto, r"l[.\-]l")
+
+    def test_preguntas_sin_signo_de_apertura(self):
+        for clave, texto in self.trad().items():
+            with self.subTest(clave):
+                self.assertNotIn("¿", texto)
+
+
 class GlosarioAplicado(unittest.TestCase):
     """Cada término del glosario presente en un literal español aparece traducido
     igual en la traducción. Heurística: pensada para idiomas sin flexión rica."""
 
-    CODIGOS = ("en", "fr")
+    CODIGOS = ("en", "fr", "ca")
 
     def test_los_terminos_se_usan_siempre_igual(self):
         cats = catalogos()

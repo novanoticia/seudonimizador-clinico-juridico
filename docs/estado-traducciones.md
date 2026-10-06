@@ -15,7 +15,7 @@ revisadas hasta que lo estén.
 |---|---|---|---|---|---|---|
 | Inglés | en | borrador-ia-sin-revision-humana | IA | nadie | — | Ortografía británica. `pseudonymisation` consta en el art. 4(5) del RGPD y en el título de las directrices del CEPD (comprobado por búsqueda; ver «Límites de la verificación»). |
 | Francés | fr | borrador-ia-sin-revision-humana | IA | nadie | — | Prioridad clínica. Registro «vous» y tipografía francesa. `pseudonymisation`, `table de correspondance` y `risque résiduel` comprobados por búsqueda (ver «Límites de la verificación»). |
-| Catalán | ca | pendiente | — | — | — | Prioridad jurídica. |
+| Catalán | ca | borrador-ia-sin-revision-humana | IA | nadie | — | Prioridad jurídica. Tuteo, como el original. El catalán no es lengua oficial de la UE: no hay RGPD oficial en catalán (hecho conocido, **no comprobado**). `pseudonimització`, `risc residual` y `llavor` son elección de la IA. |
 | Gallego | gl | pendiente | — | — | — | Prioridad jurídica. |
 | Euskera | eu | pendiente | — | — | — | Prioridad jurídica. El de mayor riesgo de error para un borrador de IA. |
 
@@ -31,6 +31,12 @@ accesible desde el entorno de desarrollo** (lo bloquea el proxy de salida), así
 término se ha comprobado abriendo el texto oficial. Quien revise debería contrastar al menos
 `pseudonymisation` / `pseudonymisation` (art. 4(5)) y `risque résiduel` / `residual risk`
 directamente en EUR-Lex.
+
+**Novedad de la tarea 7 sobre el acceso a EUR-Lex.** Tras permitir `eur-lex.europa.eu` en la
+red del entorno, el sitio responde HTTP 202 con la cabecera `x-amzn-waf-action: challenge`: sirve
+un **desafío anti-bots** (cuerpo vacío) a clientes que no son un navegador. No se ha intentado
+eludirlo. `publications.europa.eu`, `cnil.fr` y `edpb.europa.eu` siguen sin estar permitidos.
+Los términos continúan **sin comprobar en el texto oficial**.
 
 ## Estados
 
