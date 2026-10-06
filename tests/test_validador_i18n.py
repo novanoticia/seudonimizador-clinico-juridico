@@ -389,6 +389,23 @@ class EstadoDeRevision(unittest.TestCase):
                                 revisado_por="Ana", fecha="2026-11-02"))
         self.assertEqual(d.validar(), [])
 
+    def test_experimental_pasa_si_nadie_lo_ha_revisado(self):
+        d = Directorio(self)
+        d.escribir("en", render("en", ENTRADAS, estado="experimental-ia-sin-revision-humana"))
+        self.assertEqual(d.validar(), [])
+
+    def test_experimental_con_revisor_es_incoherente(self):
+        d = Directorio(self)
+        d.escribir("en", render("en", ENTRADAS, estado="experimental-ia-sin-revision-humana",
+                                revisado_por="Ana"))
+        self.assertTrue(any("experimental con revisor" in e for e in d.validar()))
+
+    def test_un_experimental_revisado_pasa_a_revisado_con_nombre_y_fecha(self):
+        d = Directorio(self)
+        d.escribir("en", render("en", ENTRADAS, estado="revisado",
+                                revisado_por="Ana", fecha="2026-11-02"))
+        self.assertEqual(d.validar(), [])
+
     def test_estado_desconocido(self):
         d = Directorio(self)
         d.escribir("en", render("en", ENTRADAS, estado="casi-listo"))

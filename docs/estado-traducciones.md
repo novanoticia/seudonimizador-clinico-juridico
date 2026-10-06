@@ -17,7 +17,7 @@ revisadas hasta que lo estén.
 | Francés | fr | borrador-ia-sin-revision-humana | IA | nadie | — | Prioridad clínica. Registro «vous» y tipografía francesa. `pseudonymisation`, `table de correspondance` y `risque résiduel` comprobados por búsqueda (ver «Límites de la verificación»). |
 | Catalán | ca | borrador-ia-sin-revision-humana | IA | nadie | — | Prioridad jurídica. Tuteo, como el original. El catalán no es lengua oficial de la UE: no hay RGPD oficial en catalán (hecho conocido, **no comprobado**). `pseudonimització`, `risc residual` y `llavor` son elección de la IA. |
 | Gallego | gl | borrador-ia-sin-revision-humana | IA | nadie | — | Prioridad jurídica. Tuteo, como el original. Diez entradas coinciden con el español (`invariable: sí`). No hay RGPD oficial en gallego (hecho conocido, **no comprobado**). `pseudonimización`, `risco residual` y `semente` son elección de la IA; la RAG admite también la grafía con `seudo-`. |
-| Euskera | eu | pendiente | — | — | — | Prioridad jurídica. El de mayor riesgo de error para un borrador de IA. |
+| Euskera | eu | experimental-ia-sin-revision-humana | IA | nadie | — | Prioridad jurídica. **Advertencia reforzada**: el aviso final es bilingüe (euskera + español) y más fuerte que el de los demás idiomas. El de mayor riesgo de error de los cinco. Trato de respeto (zuka). Términos elegidos por la IA, sin fuente oficial (ver «Límites de la verificación»). |
 
 El español (`es`) es la **referencia**: se genera del original con
 `python3 tools/extraer_es.py escribir` y no se traduce ni se revisa aquí.
@@ -43,6 +43,10 @@ Los términos continúan **sin comprobar en el texto oficial**.
 - `pendiente`: aún no existe el catálogo.
 - `borrador-ia-sin-revision-humana`: redactado por una IA; nadie lo ha leído con
   criterio de traductor ni de especialista.
+- `experimental-ia-sin-revision-humana`: lo mismo, **más** un riesgo de error alto y difícil de
+  detectar por heurística (idioma sin vocabulario compartido con el español, terminología poco
+  estandarizada). Va acompañado de una **advertencia reforzada** en la propia salida. No debe
+  presentarse como una traducción utilizable sin revisión; es el estado de `eu`.
 - `revisado`: una persona lo ha revisado. Exige nombre del revisor y fecha en la
   cabecera del catálogo y en esta tabla.
 
@@ -76,7 +80,8 @@ Los términos continúan **sin comprobar en el texto oficial**.
 - **en**, **fr**: alguien con inglés o francés clínico (para el marco de la salida basta con
   revisar las frases de seguridad).
 - **ca**, **gl**, **eu**: hablante nativo con formación jurídica o sanitaria. Para `eu` es
-  especialmente recomendable.
+  **imprescindible** antes de usarlo con casos reales: ninguna prueba automática puede
+  detectar un error de traducción en euskera.
 
 ---
 *Elaborado con asistencia de IA; requiere revisión humana.*

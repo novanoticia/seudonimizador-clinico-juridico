@@ -274,6 +274,9 @@ class PruebasComunes:
     RE_CONJUNCION_ES = r"(?<!’)\by\b"
     RE_PALABRAS_EN = r"\b(the|and|of|for|with|is|if|any)\b"
     COGNADOS = {"token", "tokens", "audit", "original", "skill"}
+    # Claves que contienen español A PROPÓSITO (el aviso bilingüe del euskera). Cada
+    # clase que use esto debe acotar con una prueba propia qué parte puede ir en español.
+    EXCEPCIONES_ES = set()
 
     def trad(self):
         return traducciones(self.CODIGO)
@@ -301,11 +304,15 @@ class PruebasComunes:
 
     def test_sin_restos_de_espanol(self):
         for clave, texto in self.trad().items():
+            if clave in self.EXCEPCIONES_ES:
+                continue
             with self.subTest(clave):
                 self.assertNotRegex(sin_contrato(texto), self.RE_CARACTERES_ES)
 
     def test_sin_palabras_funcionales_exclusivas_del_espanol(self):
         for clave, texto in self.trad().items():
+            if clave in self.EXCEPCIONES_ES:
+                continue
             with self.subTest(clave):
                 self.assertIsNone(re.search(self.RE_PALABRAS_ES, sin_contrato(texto), re.I), texto)
                 self.assertIsNone(re.search(self.RE_CONJUNCION_ES, sin_contrato(texto)), texto)
@@ -323,6 +330,8 @@ class PruebasComunes:
         if not self.COMPARA_PALABRAS:
             self.skipTest(f"{self.CODIGO}: heurística no informativa; ver marcadores ortográficos propios")
         for clave, e in catalogos()[self.CODIGO]["entradas"].items():
+            if clave in self.EXCEPCIONES_ES:
+                continue
             with self.subTest(clave):
                 es = set(re.findall(r"[^\W\d_]{4,}", sin_contrato(e["es"]).lower()))
                 tr = set(re.findall(r"[^\W\d_]{4,}", sin_contrato(e[self.CODIGO]).lower()))
@@ -474,6 +483,102 @@ class CatalogoGalego(PruebasComunes, unittest.TestCase):
         self.assertIn("xeneralización", t["riesgo.propuesta"].lower())
         self.assertIn("desprazamento", t["mapa.desplazamiento"].lower())
         self.assertIn("rexenerar", t["encabezado.regenerar"].lower())
+
+
+# ── euskera (experimental, advertencia reforzada) ──
+SEGURIDAD_EU = {
+    "encabezado.mapa": "## MAPA — testutik bereizita artxibatu edo suntsitu",
+    "encabezado.riesgo": "## HONDAR-ARRISKUAREN AUDITORETZA",
+    "encabezado.riesgo_estimado": "### Kalkulatutako hondar-arriskua",
+    "lista.nivel": "[baxua / ertaina / altua]",
+    "encabezado.fidelidad": "## FIDELTASUN-KONTROLA",
+    "fidelidad.pregunta":
+        "Testu pseudonimizatuko elementuren batek ez al du baliokiderik jatorrizkoan?",
+    "lista.si_no": "[bai / ez]",
+    "lista.veredicto": "[Gainditu / Huts / Zalantza]",
+    "lista.veredicto_fidelidad": "[Gainditu / Huts / Zalantza / Ez aplikagarria]",
+    "lista.recomendacion":
+        "[barne-erabilera sekundariorako egokia / erabili aurretik zuzenketa behar du / "
+        "C modura pasatu / zatiak banatu eta berriro pseudonimizatu / "
+        "aditu baten giza berrikuspenik gabe ez da egokia]",
+}
+SEPARADOR_AVISO_EU = " — AVISO: "
+
+
+class CatalogoEuskera(PruebasComunes, unittest.TestCase):
+    CODIGO = "eu"
+    SEGURIDAD = SEGURIDAD_EU
+    ORDEN_GRAVEDAD = [
+        ("lista.nivel", r"^\[baxua / ertaina / altua\]$"),
+        ("lista.veredicto", r"^\[Gainditu / Huts / Zalantza\]$"),
+        ("lista.veredicto_fidelidad", r"^\[Gainditu / Huts / Zalantza / Ez aplikagarria\]$"),
+    ]
+    VALORES_FIJOS = {"unidad.dias": "+N egun", "valor.ninguna": "bat ere ez",
+                     "lista.modos": "[A | B | C]"}
+    # El euskera no usa tildes (salvo en préstamos y nombres): cualquier á é í ó ú delata español.
+    RE_CARACTERES_ES = r"[áéíóúñ¿¡]"
+    RE_PALABRAS_ES = r"\b(los|las|sin|uno|una|del|el|la|de|que|para|por|con|en|es|se|un)\b"
+    COGNADOS = PruebasComunes.COGNADOS | {"mapa", "profesional"}
+    EXCEPCIONES_ES = {"aviso.traduccion"}      # bilingüe a propósito: ver pruebas de abajo
+    AVISO = [r"ESPERIMENTALA", r"giza berrikuspenik gabe", r"gaztelaniazko bertsioa",
+             r"EXPERIMENTAL", r"sin revisión humana", r"versión en español"]
+
+    # Raíz que debe aparecer en toda frase cuyo literal español contenga el término
+    # (el euskera es aglutinante: «hazia», «Haziaren»… no repiten el término entero).
+    RAICES = {
+        "seudonimización": "pseudonimizazio", "seudonimizado": "pseudonimizatu",
+        "identificadores indirectos": "zeharkako identifikatzaile",
+        "riesgo residual": "hondar-arrisku", "desplazamiento temporal": "denbora-desplazamendu",
+        "semilla": "hazi", "token": "token", "mapa": "mapa", "generalización": "orokortze",
+        "control de fidelidad": "fideltasun-kontrol", "fuga": "ihes", "regenerar": "birsortu",
+    }
+
+    def test_el_estado_es_experimental(self):
+        cab = catalogos()["eu"]["cabecera"]
+        self.assertEqual(cab["estado"], "experimental-ia-sin-revision-humana")
+        self.assertEqual(cab["revisado-por"], "nadie")
+
+    def test_la_advertencia_reforzada_es_bilingue_y_mas_fuerte_que_la_del_resto(self):
+        eu = self.trad()["aviso.traduccion"]
+        self.assertIn(SEPARADOR_AVISO_EU, eu)
+        vasco, castellano = eu.split(SEPARADOR_AVISO_EU, 1)
+        self.assertRegex(vasco, r"^ADI: ")
+        self.assertIn("ESPERIMENTALA", vasco)
+        self.assertRegex(vasco, r"akats larriak")            # «errores graves»
+        self.assertRegex(castellano, r"EXPERIMENTAL")
+        self.assertRegex(castellano, r"errores graves")
+        self.assertGreater(len(eu), 1.8 * len(traducciones("en")["aviso.traduccion"]))
+
+    def test_solo_la_segunda_mitad_del_aviso_puede_ir_en_espanol(self):
+        vasco = self.trad()["aviso.traduccion"].split(SEPARADOR_AVISO_EU, 1)[0]
+        self.assertNotRegex(sin_contrato(vasco), self.RE_CARACTERES_ES)
+        self.assertIsNone(re.search(self.RE_PALABRAS_ES, sin_contrato(vasco), re.I), vasco)
+
+    def test_el_aviso_experimental_figura_tambien_en_el_encabezado(self):
+        self.assertRegex(self.trad()["encabezado.aviso_traduccion"], r"ITZULPEN-OHARRA")
+
+    def test_las_raices_del_glosario_se_aplican_siempre_igual(self):
+        cats = catalogos()["eu"]
+        for clave, e in cats["entradas"].items():
+            if clave in self.EXCEPCIONES_ES:
+                continue
+            for termino, raiz in self.RAICES.items():
+                if termino in e["es"].lower():
+                    with self.subTest(f"{clave}:{termino}"):
+                        self.assertIn(raiz, e["eu"].lower())
+
+    def test_el_glosario_usa_las_raices_acordadas(self):
+        glosario = catalogos()["eu"]["glosario"]
+        self.assertEqual(set(glosario), set(self.RAICES))
+        for termino, raiz in self.RAICES.items():
+            with self.subTest(termino):
+                self.assertIn(raiz, glosario[termino].lower())
+
+    def test_tratamiento_de_respeto_zuka(self):
+        # Registro estándar de software: zuka («duzu», «baduzu»), no hika («duk», «dun»).
+        for clave, texto in self.trad().items():
+            with self.subTest(clave):
+                self.assertNotRegex(texto.lower(), r"\b(duk|dun|baduk|badun|haiz|hiz)\b")
 
 
 class GlosarioAplicado(unittest.TestCase):

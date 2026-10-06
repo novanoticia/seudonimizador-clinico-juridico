@@ -9,7 +9,7 @@ Formato (valores siempre en UNA línea):
 
     # i18n-en — Catálogo
     - código: en
-    - estado: borrador-ia-sin-revision-humana | revisado     (es: referencia)
+    - estado: borrador-ia-sin-revision-humana | experimental-ia-sin-revision-humana | revisado     (es: referencia)
     - redactado-por: IA
     - revisado-por: nadie
     - fecha-revision: —
@@ -47,7 +47,8 @@ FECHA_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 MARCADOR_RE = re.compile(r"\{[^{}]*\}")
 MARCADOR_VALIDO_RE = re.compile(r"^\{[a-z_][a-z0-9_]*\}$")
 PENDIENTE_RE = re.compile(r"\b(TODO|XXX|FIXME)\b|\?\?\?")
-ESTADOS = {"borrador-ia-sin-revision-humana", "revisado"}
+SIN_REVISAR = {"borrador-ia-sin-revision-humana", "experimental-ia-sin-revision-humana"}
+ESTADOS = SIN_REVISAR | {"revisado"}
 
 
 # ── texto contractual ───────────────────────────────────────────────────────
@@ -159,8 +160,9 @@ def validar_cabecera(fichero, codigo, cab):
         informe.append(f"{fichero}: estado desconocido {estado!r} (válidos: {sorted(ESTADOS)})")
         return informe
     revisor = cab.get("revisado-por", "")
-    if estado == "borrador-ia-sin-revision-humana" and revisor not in ("nadie", ""):
-        informe.append(f"{fichero}: estado borrador con revisor `{revisor}`: "
+    if estado in SIN_REVISAR and revisor not in ("nadie", ""):
+        tipo = "experimental" if estado.startswith("experimental") else "borrador"
+        informe.append(f"{fichero}: estado {tipo} con revisor `{revisor}`: "
                        f"si alguien lo revisó, el estado es `revisado`")
     if estado == "revisado":
         if revisor in ("nadie", "—", ""):
