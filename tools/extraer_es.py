@@ -109,9 +109,28 @@ ESPECIFICACION = [
     ("regenerar.texto", "auditoria.md", r'^(Indica explícitamente "regenerar" y .*)$', "no"),
 ]
 
-# Entradas `nuevo` de la referencia (texto redactado para los catálogos, no extraído).
-# (clave, "nuevo", None, seguridad, texto). Se rellena en las tareas 4 y 5.
-NUEVOS = []
+# Entradas `nuevo` de la referencia: texto redactado para los catálogos, no extraído del
+# original (que solo dice «detente y pregunta»). Con el idioma por defecto NO se emiten:
+# el español sigue improvisando las preguntas como hoy. Sirven de referencia a quien
+# traduzca y a los bloques i18n, que las citan por clave.
+# (clave, "nuevo", None, seguridad, texto)
+NUEVOS = [
+    ("encabezado.aviso_traduccion", "nuevo", None, "sí", "## AVISO DE TRADUCCIÓN"),
+    ("aviso.traduccion", "nuevo", None, "sí",
+     "Marco de esta respuesta traducido por IA, sin revisión humana. Ante cualquier duda "
+     "sobre una advertencia de seguridad, consulta la versión en español, que es la de "
+     "referencia."),
+    ("puerta.ficticio", "nuevo", None, "sí",
+     "Esto parece un caso ficticio: si ya lo es, no hay nada que seudonimizar. "
+     "¿Para qué quieres seudonimizarlo?"),
+    ("puerta.sin_mediacion", "nuevo", None, "sí",
+     "Parece que describes tu propia situación o la de un tercero sin mediación clínica o "
+     "jurídica. Este skill es para casos ya manejados por un profesional habilitado. "
+     "¿Quién interviene profesionalmente en este caso?"),
+    ("puerta.modo", "nuevo", None, "sí",
+     "Indica el modo: A (clínico), B (jurídico), C (generalización extrema) o audit. "
+     "No hay modo por defecto."),
+]
 
 # Términos del glosario (propuesta inicial; se cierra en la Fase 5).
 GLOSARIO_ES = [

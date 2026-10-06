@@ -142,6 +142,18 @@ Devuelve la respuesta con esta estructura:
 [asunciones tomadas por falta de contexto, en lista breve; si no hay, "ninguna"]
 ```
 
+<!-- i18n:inicio -->
+### Idioma de la salida (solo si se indicó un código de idioma)
+
+Aplica únicamente cuando `SKILL.md` te ha hecho cargar un catálogo `i18n-<código>.md`. Sin código, ignora este bloque: la salida es la descrita arriba, tal cual, y la regla 6 rige como siempre.
+
+- Con código, el marco va en el idioma elegido aunque el caso esté en otro: esto prevalece sobre la regla 6 en lo que toca al idioma de las notas. La transformación del caso sigue en el idioma del caso (no se traduce). Lo que escribas fuera de ella (justificaciones, decisiones por defecto, preguntas de las puertas) va en el idioma elegido.
+- Reproduce la estructura anterior sustituyendo cada literal en español por su traducción del catálogo (columna `es` → columna del idioma). Lo que va entre corchetes como instrucción no es un literal: redáctalo tú en el idioma elegido. Para las preguntas de las puertas de entrada usa las frases `puerta.*` del catálogo, en vez de improvisarlas.
+- No se traducen los tokens, `[DATO_ELIMINADO]` ni `[NO_CONSTA]`, los modos ni los nombres de fichero.
+- Tras `## DECISIONES POR DEFECTO` añade la sección `## AVISO DE TRADUCCIÓN` (su traducción está en `encabezado.aviso_traduccion`) con el texto de `aviso.traduccion`, solo cuando el idioma elegido no es el español. Es una sección más de este paso 5, no es un comentario adicional del paso 6.
+- Al iterar o regenerar (paso 6), mantén el mismo idioma.
+<!-- i18n:fin -->
+
 ## Paso 6 — Cierre
 
 Tras entregar la salida del paso 5, no añadas comentario adicional salvo que el usuario pida iteración. Si pide corrección, regenera el texto completo aplicando la corrección y manteniendo coherencia con todo lo anterior (mismo desplazamiento, mismos tokens).

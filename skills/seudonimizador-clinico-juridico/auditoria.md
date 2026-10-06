@@ -107,6 +107,16 @@ Este es el control específico contra alucinaciones del paso de transformación.
 Indica explícitamente "regenerar" y el texto se reprocesa aplicando las correcciones detectadas, manteniendo los tokens y el desplazamiento temporal del original (si son recuperables) o introduciendo nuevos (si no).
 ```
 
+<!-- i18n:inicio -->
+### Idioma de la salida del modo `audit` (solo si se indicó un código de idioma)
+
+Rige lo mismo que en `flujo.md` (bloque «Idioma de la salida»): el marco sale en el idioma del catálogo cargado, las instrucciones entre corchetes se redactan en ese idioma y el texto auditado no se traduce. Los hallazgos describen sin reproducir el dato sensible, también en el idioma elegido. Sin código, nada de esto aplica.
+
+- Tras el bloque «Si quieres regenerar» añade la sección `## AVISO DE TRADUCCIÓN` con `aviso.traduccion`, solo cuando el idioma no es el español.
+- «Regenerar»: acepta como petición tanto `regenerar` como la palabra equivalente que figura entre comillas en la entrada `regenerar.texto` del catálogo cargado.
+- En la comprobación 6 (idiomas mezclados), los tokens y los marcadores `[DATO_ELIMINADO]` y `[NO_CONSTA]` son vocabulario fijo y no cuentan como mezcla de idiomas. Cualquier otro resto en otro idioma sigue contando.
+<!-- i18n:fin -->
+
 ## Limitaciones del modo `audit`
 
 - No puede detectar identificadores que no aparezcan en el texto pero sí en metadatos no visibles del archivo (propiedades del documento, marcas de agua, autoría incrustada). El usuario debe limpiar el archivo aparte.

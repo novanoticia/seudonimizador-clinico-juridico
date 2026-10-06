@@ -321,3 +321,28 @@ origen: original
 fuente: auditoria.md
 seguridad: no
 es: Indica explícitamente "regenerar" y el texto se reprocesa aplicando las correcciones detectadas, manteniendo los tokens y el desplazamiento temporal del original (si son recuperables) o introduciendo nuevos (si no).
+
+### encabezado.aviso_traduccion
+origen: nuevo
+seguridad: sí
+es: ## AVISO DE TRADUCCIÓN
+
+### aviso.traduccion
+origen: nuevo
+seguridad: sí
+es: Marco de esta respuesta traducido por IA, sin revisión humana. Ante cualquier duda sobre una advertencia de seguridad, consulta la versión en español, que es la de referencia.
+
+### puerta.ficticio
+origen: nuevo
+seguridad: sí
+es: Esto parece un caso ficticio: si ya lo es, no hay nada que seudonimizar. ¿Para qué quieres seudonimizarlo?
+
+### puerta.sin_mediacion
+origen: nuevo
+seguridad: sí
+es: Parece que describes tu propia situación o la de un tercero sin mediación clínica o jurídica. Este skill es para casos ya manejados por un profesional habilitado. ¿Quién interviene profesionalmente en este caso?
+
+### puerta.modo
+origen: nuevo
+seguridad: sí
+es: Indica el modo: A (clínico), B (jurídico), C (generalización extrema) o audit. No hay modo por defecto.
