@@ -102,6 +102,8 @@ def parsear(texto, fichero, codigo):
             continue
         if linea.strip() == "":
             continue
+        if linea.lstrip().startswith("<!--") and linea.rstrip().endswith("-->"):
+            continue   # comentario HTML de una sola línea (p. ej. «generado, no editar»)
         if seccion == "cabecera":
             m = CABECERA_RE.match(linea)
             if m:

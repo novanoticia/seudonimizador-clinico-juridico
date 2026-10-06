@@ -431,6 +431,21 @@ class FormatoDelFichero(unittest.TestCase):
             "seguridad: sí\nes: Usa", "seguridad: sí\ncomentario: hola\nes: Usa"))
         self.assertTrue(any("campo desconocido" in e for e in d.validar()))
 
+    def test_los_comentarios_html_de_una_linea_se_ignoran_en_todas_las_secciones(self):
+        d = Directorio(self)
+        t = render("en", ENTRADAS)
+        t = t.replace("- código: en", "<!-- nota -->\n- código: en")
+        t = t.replace("## Glosario\n", "## Glosario\n<!-- otra nota -->\n")
+        t = t.replace("### campo.modo\n", "### campo.modo\n<!-- y otra -->\n")
+        d.escribir("en", t)
+        self.assertEqual(d.validar(), [])
+
+    def test_un_comentario_html_abierto_pero_no_cerrado_no_se_ignora(self):
+        d = Directorio(self)
+        d.escribir("en", render("en", ENTRADAS).replace(
+            "- código: en", "<!-- sin cerrar\n- código: en"))
+        self.assertTrue(d.validar())
+
     def test_linea_suelta_en_la_cabecera(self):
         d = Directorio(self)
         d.escribir("en", render("en", ENTRADAS).replace(
