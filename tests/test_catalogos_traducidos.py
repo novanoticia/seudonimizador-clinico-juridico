@@ -139,11 +139,130 @@ class CatalogoIngles(unittest.TestCase):
         self.assertRegex(t, r"(?i)Spanish version")
 
 
+# ── frases de seguridad del francés, fijadas una a una ──
+SEGURIDAD_FR = {
+    "encabezado.mapa": "## TABLE DE CORRESPONDANCE — à archiver ou détruire séparément du texte",
+    "encabezado.riesgo": "## AUDIT DU RISQUE RÉSIDUEL",
+    "encabezado.riesgo_estimado": "### Risque résiduel estimé",
+    "lista.nivel": "[faible / moyen / élevé]",
+    "encabezado.fidelidad": "## CONTRÔLE DE FIDÉLITÉ",
+    "fidelidad.pregunta":
+        "Un élément du texte pseudonymisé est-il sans correspondance dans l’original\u202f?",
+    "lista.si_no": "[oui / non]",
+    "lista.veredicto": "[Réussi / Échec / Incertain]",
+    "lista.veredicto_fidelidad": "[Réussi / Échec / Incertain / Non applicable]",
+    "lista.recomendacion":
+        "[apte à un usage secondaire interne / nécessite une correction avant usage / "
+        "passer au mode C / fragmenter et pseudonymiser de nouveau certaines parties / "
+        "inapte sans révision humaine experte]",
+}
+
+
+class CatalogoFrances(unittest.TestCase):
+    NBSP, FINO = "\u00a0", "\u202f"
+    # Palabras de ≥ 4 letras que coinciden legítimamente con el español.
+    COGNADOS_FR = {"token", "tokens", "audit", "original", "mode", "skill"}
+
+    def test_existe_y_valida(self):
+        self.assertTrue((SKILL / "i18n-fr.md").is_file(), "falta i18n-fr.md")
+        self.assertEqual(v.validar_arbol_real(), [])
+
+    def test_tiene_todas_las_claves_de_la_referencia(self):
+        cats = catalogos()
+        self.assertEqual(set(cats["fr"]["entradas"]), set(cats["es"]["entradas"]))
+
+    def test_las_frases_de_seguridad_son_las_revisadas(self):
+        t = traducciones("fr")
+        for clave, esperado in SEGURIDAD_FR.items():
+            with self.subTest(clave):
+                self.assertEqual(t[clave], esperado)
+
+    def test_el_orden_de_las_listas_de_gravedad_se_conserva(self):
+        t = traducciones("fr")
+        self.assertRegex(t["lista.nivel"], r"^\[faible / moyen / élevé\]$")
+        self.assertRegex(t["lista.veredicto"], r"^\[Réussi / Échec / Incertain\]$")
+        self.assertTrue(t["lista.veredicto_fidelidad"].endswith("Non applicable]"))
+
+    def test_sin_restos_de_espanol(self):
+        # En francés valen é è ê à ù ç…; no valen á í ó ú ñ ¿ ¡.
+        for clave, texto in traducciones("fr").items():
+            with self.subTest(clave):
+                self.assertNotRegex(sin_contrato(texto), r"[áíóúñ¿¡]")
+
+    def test_sin_palabras_funcionales_exclusivas_del_espanol(self):
+        palabras = re.compile(r"\b(el|los|las|del|para|por|con|sin|una|uno)\b", re.I)
+        # «y» conjunción española: en francés solo existe como pronombre tras
+        # apóstrofo («il n’y a»), así que se detecta solo si no va precedido de él.
+        conjuncion = re.compile(r"(?<!’)\by\b")
+        for clave, texto in traducciones("fr").items():
+            with self.subTest(clave):
+                self.assertIsNone(palabras.search(sin_contrato(texto)), texto)
+                self.assertIsNone(conjuncion.search(sin_contrato(texto)), texto)
+
+    def test_sin_restos_de_ingles(self):
+        palabras = re.compile(r"\b(the|and|of|for|with|is|if|any)\b", re.I)
+        for clave, texto in traducciones("fr").items():
+            with self.subTest(clave):
+                self.assertIsNone(palabras.search(sin_contrato(texto)), texto)
+
+    def test_no_se_deja_sin_traducir_ninguna_palabra_del_literal_espanol(self):
+        for clave, e in catalogos()["fr"]["entradas"].items():
+            with self.subTest(clave):
+                es = set(re.findall(r"[^\W\d_]{4,}", sin_contrato(e["es"]).lower()))
+                fr = set(re.findall(r"[^\W\d_]{4,}", sin_contrato(e["fr"]).lower()))
+                self.assertEqual((es & fr) - self.COGNADOS_FR, set())
+
+    # ── tipografía francesa ──
+    def test_dos_puntos_con_espacio_insecable_delante(self):
+        for clave, texto in traducciones("fr").items():
+            with self.subTest(clave):
+                self.assertNotRegex(sin_contrato(texto), r"(?<![\u00a0])(?<!\u202f):")
+
+    def test_interrogacion_con_espacio_fino_o_insecable_delante(self):
+        for clave, texto in traducciones("fr").items():
+            with self.subTest(clave):
+                self.assertNotRegex(sin_contrato(texto), r"(?<![\u00a0\u202f])\?")
+
+    def test_sin_apostrofos_ni_comillas_rectas(self):
+        for clave, texto in traducciones("fr").items():
+            with self.subTest(clave):
+                self.assertNotIn("'", texto)
+                self.assertNotIn('"', texto)
+
+    def test_las_comillas_francesas_llevan_espacio_insecable_dentro(self):
+        for clave, texto in traducciones("fr").items():
+            with self.subTest(clave):
+                self.assertEqual(texto.count("«"), texto.count("»"))
+                self.assertEqual(texto.count("«" + self.NBSP), texto.count("«"))
+                self.assertEqual(texto.count(self.NBSP + "»"), texto.count("»"))
+
+    def test_los_valores_fijos_y_la_palabra_de_regenerar(self):
+        t = traducciones("fr")
+        self.assertEqual(t["unidad.dias"], "+N jours")
+        self.assertEqual(t["valor.ninguna"], "aucune")
+        self.assertEqual(t["lista.modos"], "[A | B | C]")
+        # El modo audit reconoce la palabra entre comillas de esta entrada.
+        self.assertIn("«\u00a0régénérer\u00a0»", t["regenerar.texto"])
+
+    def test_el_aviso_remite_al_espanol_y_dice_que_no_esta_revisado(self):
+        t = traducciones("fr")["aviso.traduccion"]
+        self.assertRegex(t, r"(?i)traduit par une IA")
+        self.assertRegex(t, r"(?i)sans révision humaine")
+        self.assertRegex(t, r"(?i)version espagnole")
+
+    def test_registro_vous(self):
+        # Registro profesional: se trata de «vous», no de «tu».
+        for clave in ("puerta.ficticio", "puerta.sin_mediacion", "puerta.modo",
+                      "regenerar.texto", "encabezado.regenerar"):
+            with self.subTest(clave):
+                self.assertNotRegex(traducciones("fr")[clave], r"(?i)\b(tu|ton|ta|tes|toi)\b")
+
+
 class GlosarioAplicado(unittest.TestCase):
     """Cada término del glosario presente en un literal español aparece traducido
     igual en la traducción. Heurística: pensada para idiomas sin flexión rica."""
 
-    CODIGOS = ("en",)
+    CODIGOS = ("en", "fr")
 
     def test_los_terminos_se_usan_siempre_igual(self):
         cats = catalogos()

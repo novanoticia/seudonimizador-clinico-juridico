@@ -13,14 +13,24 @@ revisadas hasta que lo estén.
 
 | Idioma | Código | Estado | Redactado por | Revisado por | Fecha de revisión | Notas |
 |---|---|---|---|---|---|---|
-| Inglés | en | borrador-ia-sin-revision-humana | IA | nadie | — | Ortografía británica, como el inglés oficial del RGPD. |
-| Francés | fr | pendiente | — | — | — | Prioridad clínica. |
+| Inglés | en | borrador-ia-sin-revision-humana | IA | nadie | — | Ortografía británica. `pseudonymisation` consta en el art. 4(5) del RGPD y en el título de las directrices del CEPD (comprobado por búsqueda; ver «Límites de la verificación»). |
+| Francés | fr | borrador-ia-sin-revision-humana | IA | nadie | — | Prioridad clínica. Registro «vous» y tipografía francesa. `pseudonymisation`, `table de correspondance` y `risque résiduel` comprobados por búsqueda (ver «Límites de la verificación»). |
 | Catalán | ca | pendiente | — | — | — | Prioridad jurídica. |
 | Gallego | gl | pendiente | — | — | — | Prioridad jurídica. |
 | Euskera | eu | pendiente | — | — | — | Prioridad jurídica. El de mayor riesgo de error para un borrador de IA. |
 
 El español (`es`) es la **referencia**: se genera del original con
 `python3 tools/extraer_es.py escribir` y no se traduce ni se revisa aquí.
+
+## Límites de la verificación de términos
+
+Los nombres oficiales (RGPD) y los términos de la CNIL se comprobaron **por búsqueda web**,
+cuyos resúmenes **no son texto literal**: en una ocasión el buscador escribió «pseudonymization»
+(grafía americana) al parafrasear el considerando 26, que no es la oficial. **EUR-Lex no es
+accesible desde el entorno de desarrollo** (lo bloquea el proxy de salida), así que ningún
+término se ha comprobado abriendo el texto oficial. Quien revise debería contrastar al menos
+`pseudonymisation` / `pseudonymisation` (art. 4(5)) y `risque résiduel` / `residual risk`
+directamente en EUR-Lex.
 
 ## Estados
 
