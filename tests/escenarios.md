@@ -94,8 +94,34 @@ catálogo, puertas truncadas). I5 (euskera, interrogativa negativa) **no se camb
 error confirmado, y alterar la polaridad cambiaría el contrato con el original; queda anotado como pendiente de
 revisión nativa.
 
-**Límites de esta ronda:** los cambios derivados de los hallazgos se verificaron con pruebas automáticas, **no se
-han vuelto a simular** (no hay Ronda 2). El revisor y los simuladores son modelos: no equivalen a una revisión humana.
+**Límites de esta ronda:** el revisor y los simuladores son modelos: no equivalen a una revisión humana.
+
+## Ronda 2
+
+**Estado: ejecutada** sobre el paquete reconstruido con los arreglos de la ronda 1 (`bash scripts/build-dist.sh`,
+paquete completo), solo en los escenarios afectados: S1, S4, S6 y S10. Cuatro simuladores nuevos de contexto
+limpio; cada uno declara haber leído solo ficheros del paquete (autodeclaración, no verificada). Simulación, **no
+plataforma real**. No se cambió ningún criterio entre la ronda 1 y la 2.
+
+**Resultado automático:** S1 23/23, S4 41/41, S6 8/8, S10 8/8; ningún criterio falla.
+
+**Lo que se comprobó leyendo las respuestas:**
+- S4: el aviso de código desconocido sale en la primera línea, antes de `## APERTURA`, y el resto continúa en español.
+- S6 y S10: la pregunta de puerta sale en el idioma pedido (inglés, francés), la respuesta se detiene ahí y lleva
+  al final el aviso de traducción, que en la ronda 1 faltaba.
+- S1: marco en inglés, texto del caso en castellano, tokens y marcadores sin traducir, aviso al final.
+
+**Lo que no demuestra:** un solo simulador por escenario, un solo día. Que 4 de 4 hagan lo previsto no mide la
+variabilidad entre ejecuciones ni entre modelos.
+
+**Observaciones nuevas de los simuladores (pendientes, no se tocan):**
+- S10: `puerta.sin_mediacion` pregunta quién interviene profesionalmente aunque el usuario ya ha dicho que nadie;
+  el skill no dice si hay que ofrecer una orientación. Es el comportamiento del original (puerta de entrada),
+  traducido; cambiarlo alteraría el español.
+- S1: en el control de fidelidad, con respuesta «no», el simulador escribió «not applicable» como texto libre
+  (la plantilla no dice si se omite).
+- Reiteradas de la ronda 1: fechas solo con mes, token del centro de salud mental en localidad pequeña,
+  `[CONVIVIENTE_A]`, orden de APERTURA y MAPA.
 
 ## Ejecuciones en plataformas reales
 

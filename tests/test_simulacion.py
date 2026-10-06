@@ -223,6 +223,7 @@ class Documentacion(unittest.TestCase):
 
     def test_registra_cada_ronda_de_simulacion(self):
         self.assertRegex(self.t, r"(?m)^## Ronda 1\b")
+        self.assertRegex(self.t, r"(?m)^## Ronda 2\b")
 
     def test_declara_que_los_simuladores_pudieron_ver_el_repositorio(self):
         # Límite metodológico real: no están aislados a nivel de sistema.
