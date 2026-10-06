@@ -16,7 +16,7 @@ revisadas hasta que lo estén.
 | Inglés | en | borrador-ia-sin-revision-humana | IA | nadie | — | Ortografía británica. `pseudonymisation` consta en el art. 4(5) del RGPD y en el título de las directrices del CEPD (comprobado por búsqueda; ver «Límites de la verificación»). |
 | Francés | fr | borrador-ia-sin-revision-humana | IA | nadie | — | Prioridad clínica. Registro «vous» y tipografía francesa. `pseudonymisation`, `table de correspondance` y `risque résiduel` comprobados por búsqueda (ver «Límites de la verificación»). |
 | Catalán | ca | borrador-ia-sin-revision-humana | IA | nadie | — | Prioridad jurídica. Tuteo, como el original. El catalán no es lengua oficial de la UE: no hay RGPD oficial en catalán (hecho conocido, **no comprobado**). `pseudonimització`, `risc residual` y `llavor` son elección de la IA. |
-| Gallego | gl | pendiente | — | — | — | Prioridad jurídica. |
+| Gallego | gl | borrador-ia-sin-revision-humana | IA | nadie | — | Prioridad jurídica. Tuteo, como el original. Diez entradas coinciden con el español (`invariable: sí`). No hay RGPD oficial en gallego (hecho conocido, **no comprobado**). `pseudonimización`, `risco residual` y `semente` son elección de la IA; la RAG admite también la grafía con `seudo-`. |
 | Euskera | eu | pendiente | — | — | — | Prioridad jurídica. El de mayor riesgo de error para un borrador de IA. |
 
 El español (`es`) es la **referencia**: se genera del original con

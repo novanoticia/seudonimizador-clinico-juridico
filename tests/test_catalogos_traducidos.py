@@ -315,7 +315,13 @@ class PruebasComunes:
             with self.subTest(clave):
                 self.assertIsNone(re.search(self.RE_PALABRAS_EN, sin_contrato(texto), re.I), texto)
 
+    # False si el idioma es tan cercano al español que la heurística no discrimina
+    # (gallego: ~85 palabras idénticas). Entonces la clase define marcadores propios.
+    COMPARA_PALABRAS = True
+
     def test_no_se_deja_sin_traducir_ninguna_palabra_del_literal_espanol(self):
+        if not self.COMPARA_PALABRAS:
+            self.skipTest(f"{self.CODIGO}: heurística no informativa; ver marcadores ortográficos propios")
         for clave, e in catalogos()[self.CODIGO]["entradas"].items():
             with self.subTest(clave):
                 es = set(re.findall(r"[^\W\d_]{4,}", sin_contrato(e["es"]).lower()))
@@ -403,11 +409,78 @@ class CatalogoCatala(PruebasComunes, unittest.TestCase):
                 self.assertNotIn("¿", texto)
 
 
+# ── gallego ──
+SEGURIDAD_GL = {
+    "encabezado.mapa": "## MAPA — arquivar ou destruír por separado do texto",
+    "encabezado.riesgo": "## AUDITORÍA DO RISCO RESIDUAL",
+    "encabezado.riesgo_estimado": "### Risco residual estimado",
+    "lista.nivel": "[baixo / medio / alto]",
+    "encabezado.fidelidad": "## CONTROL DE FIDELIDADE",
+    "fidelidad.pregunta":
+        "Hai algún elemento do texto pseudonimizado sen correspondencia no orixinal?",
+    "lista.si_no": "[si / non]",
+    "lista.veredicto": "[Pasa / Fallo / Dúbida]",
+    "lista.veredicto_fidelidad": "[Pasa / Fallo / Dúbida / Non aplicable]",
+    "lista.recomendacion":
+        "[apto para uso secundario interno / require corrección antes do uso / "
+        "pasar ao modo C / fragmentar e pseudonimizar de novo partes / "
+        "non apto sen revisión humana experta]",
+}
+
+
+class CatalogoGalego(PruebasComunes, unittest.TestCase):
+    CODIGO = "gl"
+    SEGURIDAD = SEGURIDAD_GL
+    ORDEN_GRAVEDAD = [
+        ("lista.nivel", r"^\[baixo / medio / alto\]$"),
+        ("lista.veredicto", r"^\[Pasa / Fallo / Dúbida\]$"),
+        ("lista.veredicto_fidelidad", r"^\[Pasa / Fallo / Dúbida / Non aplicable\]$"),
+    ]
+    VALORES_FIJOS = {"unidad.dias": "+N días", "valor.ninguna": "ningunha",
+                     "lista.modos": "[A | B | C]"}
+    AVISO = [r"(?i)traducido por unha IA", r"(?i)sen revisión humana",
+             r"(?i)versión en castelán"]
+    # En gallego valen á é í ó ú y ñ; no existen ¿ ¡.
+    RE_CARACTERES_ES = r"[¿¡]"
+    # En gallego «para», «por», «con», «que» y «el» (pronombre) existen: no se vigilan.
+    RE_PALABRAS_ES = r"\b(los|las|sin|uno|una|del)\b"
+    COMPARA_PALABRAS = False     # ~85 palabras idénticas con el español: no discrimina
+    MAX_INVARIABLES = 12         # hoy 10; más indicaría un catálogo mayormente copiado
+
+    def test_el_numero_de_entradas_invariables_esta_acotado(self):
+        invariables = [k for k, e in catalogos()["gl"]["entradas"].items()
+                       if e["gl"] == e["es"]]
+        self.assertLessEqual(len(invariables), self.MAX_INVARIABLES, invariables)
+
+    def test_sin_marcadores_ortograficos_del_espanol(self):
+        # -dad (gl: -dade), -miento (gl: -mento) y palabras sin equivalente idéntico.
+        # No se vigila «ll»: existe en palabras gallegas (detalles, fallo) y en «skill».
+        patrones = [r"\b\w+dad\b", r"\b\w+miento\b",
+                    r"\b(hay|también|muy|mucho|cuando|donde|puede|tiene)\b"]
+        for clave, texto in self.trad().items():
+            with self.subTest(clave):
+                for p in patrones:
+                    self.assertNotRegex(sin_contrato(texto).lower(), p)
+
+    def test_sin_la_letra_j(self):
+        # En gallego la «j» solo aparece en préstamos: delata «jurídico», «justificación»…
+        for clave, texto in self.trad().items():
+            with self.subTest(clave):
+                self.assertNotRegex(sin_contrato(texto).lower(), r"j")
+
+    def test_formas_gallegas_de_los_terminos_clave(self):
+        t = self.trad()
+        self.assertIn("xustificación", t["riesgo.justificacion"].lower())
+        self.assertIn("xeneralización", t["riesgo.propuesta"].lower())
+        self.assertIn("desprazamento", t["mapa.desplazamiento"].lower())
+        self.assertIn("rexenerar", t["encabezado.regenerar"].lower())
+
+
 class GlosarioAplicado(unittest.TestCase):
     """Cada término del glosario presente en un literal español aparece traducido
     igual en la traducción. Heurística: pensada para idiomas sin flexión rica."""
 
-    CODIGOS = ("en", "fr", "ca")
+    CODIGOS = ("en", "fr", "ca", "gl")
 
     def test_los_terminos_se_usan_siempre_igual(self):
         cats = catalogos()
