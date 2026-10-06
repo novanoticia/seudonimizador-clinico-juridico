@@ -4,6 +4,62 @@ Todos los cambios relevantes del skill `seudonimizador-clinico-juridico` se docu
 
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y la numeración aplica [Semantic Versioning](https://semver.org/lang/es/) en su lectura adaptada para skills (mayor = ruptura de comportamiento, menor = ampliación o refuerzo de reglas, parche = correcciones puntuales).
 
+## [1.5] — sin publicar
+
+Multiidioma: el marco de la respuesta puede salir en otro idioma, sin cambiar nada del español.
+
+### Añadido
+
+- **Idioma de la respuesta.** Un código de idioma tras el modo, solo en la primera línea y con el caso en la
+  línea siguiente (`/seudonimizar A en`). Idiomas: `en`, `fr`, `ca`, `gl` y `eu`; `es` es el original y la
+  referencia. Sin código, todo funciona exactamente como antes.
+- **Catálogos `i18n-<código>.md`**, uno por idioma, descubiertos por nombre de fichero (añadir un idioma no
+  exige editar `SKILL.md`), más `i18n-es.md`, la referencia generada del original. 55 claves por catálogo
+  (50 literales extraídos del original y 5 entradas nuevas: aviso de traducción y las preguntas de las
+  puertas de entrada).
+- **Aviso de traducción** al final de la salida, en el idioma elegido, solo cuando no es el español. En `eu`
+  es una **advertencia reforzada** y bilingüe (euskera y español).
+- **Verificación automática**: `tools/linea_base.py` (el español no cambia), `tools/validar_i18n.py`
+  (validador de catálogos), `tools/extraer_es.py` (extractor de la referencia y comprobación de que no
+  queda texto visible sin clave), una suite de pruebas en `tests/` y el workflow de GitHub Actions
+  `.github/workflows/verificar.yml` (check `verificar`). Solo biblioteca estándar de Python.
+- **Documentación**: `docs/estado-traducciones.md` (quién escribió y quién revisó cada idioma),
+  `docs/guia-web-github.md` (guía paso a paso desde el navegador), `AGENTS.md` y `CLAUDE.md`.
+
+### Cambiado
+
+- Cambios al original: **solo adiciones, delimitadas** por `<!-- i18n:inicio -->` y `<!-- i18n:fin -->`;
+  ninguna línea reescrita ni eliminada (`git diff --numstat`: 40 líneas añadidas, 0 eliminadas):
+  - `SKILL.md`: bloque «Idioma de la respuesta» y una línea en «Archivos del skill».
+  - `flujo.md`: bloque «Idioma de la salida», tras la plantilla del paso 5.
+  - `auditoria.md`: bloque «Idioma de la salida del modo `audit`», que además aclara que los tokens y los
+    dos marcadores fijos no cuentan como idiomas mezclados en la comprobación 6.
+- Versión `1.5.0` en los tres manifiestos y en el README. El paquete de la Release incluye ahora los
+  `i18n-*.md`; el resto de su forma no cambia.
+- El frontmatter y la `description` de `SKILL.md` no se han tocado.
+
+### Corregido
+
+- Sin correcciones en el original ni en el comportamiento en español.
+
+### Limitaciones
+
+- **Las traducciones son borradores de IA, sin revisión humana**, y contienen frases de seguridad y de
+  contenido clínico y jurídico. `eu` es **experimental**, de alto riesgo: ninguna comprobación automática
+  puede detectar un error de traducción en euskera. Estado detallado en `docs/estado-traducciones.md`.
+- **No se ha ejecutado el skill con un idioma distinto del español en ninguna plataforma real**, ni se ha
+  simulado todavía con subagentes. Lo verificado es automático: pruebas, validadores y comparación con la
+  línea base.
+- Los **términos oficiales** (RGPD) se comprobaron por búsqueda web, no abriendo el texto oficial: EUR-Lex
+  sirve un desafío anti-bots que impide leerlo desde el entorno de desarrollo. El catalán, el gallego y el
+  euskera no son lenguas oficiales de la UE, así que no hay RGPD oficial en ellas (hecho conocido, no
+  comprobado).
+- Si una plataforma carga solo `SKILL.md` y no los catálogos, el idioma no funciona: el skill responde en
+  español y lo dice (fallo seguro).
+- Los tokens y los marcadores `[DATO_ELIMINADO]` y `[NO_CONSTA]` no se traducen: en un caso en otro idioma
+  aparecerán palabras españolas entre corchetes.
+- El código de idioma solo se reconoce con la primera línea de exactamente tres elementos.
+
 ## [Sin publicar]
 
 ### Añadido
