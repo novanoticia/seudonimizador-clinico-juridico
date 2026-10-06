@@ -44,8 +44,9 @@ produce **un único check llamado `verificar`**.
    validador de catálogos, referencia en español, línea base del español). Si uno falla, ábrelo y
    lee el final del texto: dice qué prueba y por qué.
 
-Se ejecuta en cada subida de una rama y en cada Pull Request. Tarda en torno a un minuto
-(la suite de pruebas local tarda unos 3 segundos).
+Se ejecuta en cada subida de una rama y en cada Pull Request. **Comprobado:** la primera
+ejecución en GitHub tardó unos 14 segundos y salió en verde
+(<https://github.com/novanoticia/seudonimizador-clinico-juridico/actions/runs/37510521812>).
 
 ## 4. Un check que avisa NO es una protección de rama que bloquea
 
@@ -71,8 +72,11 @@ Esta es la confusión más habitual, así que va despacio.
 - Tu cuenta tiene permiso de **administrador** sobre el repositorio, así que puedes activar la protección.
 - El historial usa **commits de fusión** («Merge pull request #N…»): esa es la opción que ya has
   usado al fusionar PR anteriores.
-- El nombre exacto del check es el del job en el workflow: `verificar`. Una prueba automática vigila
-  que esta guía y el workflow digan lo mismo.
+- El nombre exacto del check es el del job en el workflow: `verificar`. **Lo he leído en la API de
+  GitHub** (`name: verificar` en la ejecución real) y una prueba automática vigila que esta guía y
+  el workflow digan lo mismo.
+- El workflow **se ejecuta de verdad** al subir la rama y **sale en verde**: los cuatro pasos de
+  verificación terminan en `success`.
 
 ### No comprobado
 
@@ -146,7 +150,8 @@ para este flujo no hace falta.
 |---|---|
 | Repositorio público, `main` sin protección, sin workflows previos, tu cuenta es administradora | Comprobado en este repositorio |
 | Nombre del check: `verificar` | Comprobado: coincide con el job del workflow (prueba automática) |
-| Que el workflow se ejecuta en GitHub y sale verde | Ver el estado de la ejecución en la pestaña **Actions** (lo anota el informe de la tarea 8) |
+| Que el workflow se ejecuta en GitHub y sale verde | Comprobado: ejecución nº 1 de la rama de trabajo, verde |
+| Que el CI se pone **rojo** cuando algo falla | **No comprobado en GitHub.** En local sí: cada comprobación sale con código 1 si algo falla (pruebas de la suite). Para verlo en GitHub haría falta subir a propósito un cambio roto |
 | Pasos de la interfaz para crear la regla | No comprobado: de memoria; la interfaz cambia |
 | Plan gratuito, regla de los 7 días, comportamiento de administradores | No comprobado |
 
