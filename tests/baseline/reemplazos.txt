@@ -1,0 +1,3 @@
+# Lista cerrada de líneas del ORIGINAL que pueden cambiar.
+# Formato: fichero.md:nº_de_línea_del_original   # justificación
+# Vacía a propósito: la Fase 1.4 aprobó solo ADICIONES.
