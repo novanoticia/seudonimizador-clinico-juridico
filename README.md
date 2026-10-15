@@ -1,5 +1,7 @@
 # Seudonimizador Clínico-Jurídico
 
+[![Versión actual en main](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fnovanoticia%2Fseudonimizador-clinico-juridico%2Fmain%2Fplugin.json&query=%24.version&prefix=v&label=Versi%C3%B3n%20actual%20en%20main&color=blue)](https://github.com/novanoticia/seudonimizador-clinico-juridico/blob/main/plugin.json)
+
 Skill de transformación de casos reales clínicos y jurídicos en versiones aptas para uso secundario (estudio, supervisión, formación, redacción didáctica), conservando utilidad analítica y eliminando identificadores directos e indirectos.
 
 **Versión actual: v1.5** ([changelog](CHANGELOG.md))
