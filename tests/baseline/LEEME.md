@@ -28,3 +28,7 @@ python3 -m unittest discover -s tests -v    # pruebas (incluye pruebas que deben
 python3 tools/linea_base.py capturar <commit>   # SOLO para rehacer la base: requiere aprobación
 ```
 La comparación con `git show` necesita el historial completo (`fetch-depth: 0` en CI).
+
+## Excepción de licencia autorizada
+
+La petición del titular de adoptar Apache-2.0 se refleja en `tools/linea_base.py`: exige ese valor en los manifiestos y fija las huellas exactas de `LICENSE` y `NOTICE` en el paquete. Todos los archivos de la captura histórica permanecen intactos y reproducibles. El contenido del skill y su frontmatter no se recapturan.

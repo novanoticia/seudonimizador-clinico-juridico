@@ -345,6 +345,10 @@ class PaqueteEnNegativo(unittest.TestCase):
         r = self._comparar(lambda c: (c / "LICENSE").write_text("otra licencia\n"))
         self.assertTrue(any("LICENSE" in e and "ha cambiado" in e for e in r), r)
 
+    def test_cambia_el_aviso_de_autoria(self):
+        r = self._comparar(lambda c: (c / "NOTICE").write_text("sin atribucion\n"))
+        self.assertTrue(any("NOTICE" in e and "ha cambiado" in e for e in r), r)
+
     def test_cambia_un_md_dentro_del_paquete(self):
         def mod(c):
             f = c / lb.SKILL_DIR / "flujo.md"

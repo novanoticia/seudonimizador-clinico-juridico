@@ -38,7 +38,7 @@ def esperado():
     """Nombres que debe contener el paquete, calculados del árbol."""
     md = {f"{NOMBRE}/{f}" for f in lb.FICHEROS_MD}
     catalogos = {f"{NOMBRE}/{p.name}" for p in SKILL.glob("i18n-*.md")}
-    return md | catalogos | {f"{NOMBRE}/LICENSE"}
+    return md | catalogos | {f"{NOMBRE}/LICENSE", f"{NOMBRE}/NOTICE"}
 
 
 def version():
@@ -76,7 +76,7 @@ class ContenidoDelPaquete(unittest.TestCase):
 
     def test_los_ficheros_son_identicos_a_los_del_arbol(self):
         for nombre, m in self.miembros.items():
-            origen = RAIZ / "LICENSE" if nombre.endswith("/LICENSE") else SKILL / nombre.split("/", 1)[1]
+            origen = RAIZ / nombre.rsplit("/", 1)[1] if nombre.rsplit("/", 1)[1] in {"LICENSE", "NOTICE"} else SKILL / nombre.split("/", 1)[1]
             with self.subTest(nombre):
                 self.assertEqual(m["sha256"], sha(origen.read_bytes()))
 

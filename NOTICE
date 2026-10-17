@@ -1,0 +1,27 @@
+seudonimizador-clinico-juridico
+Copyright (c) 2026 Pablo
+Web: mindandhealth.org · github.com/novanoticia
+
+El material original de esta revisión se distribuye bajo Apache License 2.0.
+Estos avisos son informativos y no modifican los términos de LICENSE.
+Las versiones previamente distribuidas bajo CC BY 4.0 conservan los permisos
+ya concedidos. Los PDF versionados de docs/ son documentos históricos y
+conservan la licencia indicada en su interior.
+Los materiales de terceros referenciados conservan sus propios derechos y
+licencias; Apache 2.0 no se aplica a esos materiales ni concede derechos de marca.
+
+  El skill ha sido diseñado con asistencia de IA (Claude, Anthropic).
+  Las decisiones de diseño, la dirección y la responsabilidad del
+  contenido corresponden al autor.
+
+  Esta herramienta produce seudonimización con generalización dirigida,
+  no anonimización en el sentido del Considerando 26 del RGPD. No
+  sustituye los procedimientos formales de anonimización exigibles
+  por RGPD/LOPDGDD para publicación científica, peritaje formal,
+  expediente oficial o cesión a terceros.
+
+  No es un producto sanitario en el sentido del Reglamento (UE)
+  2017/745 ni una herramienta de asesoramiento jurídico. Su uso
+  debe entenderse como apoyo metodológico para uso secundario
+  (estudio, supervisión, formación), pendiente de validación con
+  casos reales por profesionales habilitados.

@@ -7,7 +7,7 @@
     "url": "https://mindandhealth.org"
   },
   "repository": "https://github.com/novanoticia/seudonimizador-clinico-juridico",
-  "license": "CC-BY-4.0",
+  "license": "Apache-2.0",
   "keywords": [
     "seudonimizacion",
     "anonimizacion",
