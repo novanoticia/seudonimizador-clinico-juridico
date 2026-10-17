@@ -295,10 +295,16 @@ estructura de [Agent Plugins 1.0.0](https://agent-plugins.org/specification).
 
 ## Licencia
 
-[CC BY 4.0](LICENSE) — Creative Commons Attribution 4.0 International.
+[Apache License 2.0](LICENSE) (`Apache-2.0`). Copyright (c) 2026 Pablo — mindandhealth.org · github.com/novanoticia.
 
-Puedes usar, modificar y redistribuir el skill, incluso comercialmente, siempre que cites la autoría y enlaces a este repositorio.
+Permite usar, modificar y redistribuir el material, incluso comercialmente, conforme al texto íntegro de `LICENSE`. Al redistribuir, conserva la licencia y los avisos aplicables de autoría y atribución, incluye `NOTICE` e indica los archivos modificados. Se distribuye sin garantías; Apache 2.0 incluye una concesión de patentes y no concede derechos sobre marcas.
+
+El cambio se aplica al material original del proyecto. Las referencias y materiales de terceros conservan sus propios derechos y condiciones; en particular, esta licencia no relicencia clasificaciones, publicaciones ni normas externas. Las salidas generadas sobre casos concretos no quedan automáticamente sujetas a esta licencia.
+
+Las versiones ya distribuidas bajo CC BY 4.0 conservan los permisos concedidos. Los PDF versionados de `docs/` se mantienen como documentos históricos bajo la licencia indicada en ellos; no se sustituyen retroactivamente los archivos de releases anteriores. Véase `NOTICE`.
 
 ## Atribución y nota ética
 
 Este skill ha sido desarrollado con asistencia de IA (Claude, de Anthropic) en iteración con un usuario profesional. La estructura, las reglas duras, el catálogo de tokens y el protocolo de auditoría reflejan decisiones humanas tomadas en respuesta a casos de prueba reales. El uso del skill **requiere revisión humana experta** en cada aplicación, y no sustituye los procedimientos formales de anonimización exigidos por el marco normativo vigente.
+
+Nota sobre esta actualización de licencia: preparada con asistencia de IA (Codex, OpenAI); pendiente de revisión humana.

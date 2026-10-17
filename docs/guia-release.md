@@ -75,8 +75,8 @@ Los ficheros quedan en la carpeta `dist/`.
 
 ### Comprobar el paquete antes de subirlo
 
-El propio script imprime la lista. Debe contener estos 12 ficheros (los cinco `.md` del skill, los
-**seis catálogos** y la licencia), más la línea de la carpeta:
+El propio script imprime la lista. Debe contener estos 13 ficheros (los cinco `.md` del skill, los
+**seis catálogos**, la licencia y los avisos de autoría), más la línea de la carpeta:
 
 ```text
 seudonimizador-clinico-juridico/
@@ -92,6 +92,7 @@ seudonimizador-clinico-juridico/i18n-ca.md
 seudonimizador-clinico-juridico/i18n-gl.md
 seudonimizador-clinico-juridico/i18n-eu.md
 seudonimizador-clinico-juridico/LICENSE
+seudonimizador-clinico-juridico/NOTICE
 ```
 
 (El orden da igual.) Para volver a ver la lista: `unzip -l dist/seudonimizador-clinico-juridico.zip`.

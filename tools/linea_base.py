@@ -10,6 +10,7 @@ comprueba después que el árbol de trabajo solo difiere en lo permitido:
     hay y no es el salto final del fichero).
   * Las líneas listadas, una a una, en tests/baseline/reemplazos.txt.
   * La clave `version` de los manifiestos.
+  * Cambio autorizado a Apache-2.0 y NOTICE, con huellas exactas fijadas abajo.
   * Ficheros nuevos `i18n-<código>.md` en el paquete.
 
 Solo biblioteca estándar. Uso:
@@ -213,6 +214,9 @@ def normalizar_manifiesto(dato):
 
 def comparar_manifiesto_dato(nombre, dato):
     base = cargar("manifiestos.json")[nombre]
+    # Cambio de licencia solicitado por el titular; no se altera la captura histórica.
+    if "license" in base:
+        base["license"] = "Apache-2.0"
     if normalizar_manifiesto(dato) != base:
         return [f"{nombre}: ha cambiado algo distinto de `version`"]
     return []
@@ -258,6 +262,9 @@ def exportar_commit(commit, destino):
 
 def comparar_paquete(raiz=RAIZ):
     base = cargar("paquete.json")
+    # Excepción autorizada de licencia; se siguen comprobando los bytes exactos.
+    base["miembros"][f"{NOMBRE}/LICENSE"] = "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    base["miembros"][f"{NOMBRE}/NOTICE"] = "9ea7e555ff28f49b877fc1cc67305b4cb720263e1be6aa539596d59819242018"
     actual = construir_paquete(raiz)
     informe = []
     if not actual["skill_igual_zip"]:

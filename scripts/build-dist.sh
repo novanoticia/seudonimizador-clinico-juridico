@@ -39,7 +39,7 @@ trap 'rm -rf "$STAGE"' EXIT
 
 mkdir -p "$STAGE/$NOMBRE"
 cp "$ORIGEN"/*.md "$STAGE/$NOMBRE/"
-cp LICENSE "$STAGE/$NOMBRE/"
+cp LICENSE NOTICE "$STAGE/$NOMBRE/"
 
 mkdir -p dist
 rm -f dist/"$NOMBRE".zip dist/"$NOMBRE".skill
