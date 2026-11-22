@@ -7,22 +7,20 @@ Skill de transformación de casos reales clínicos y jurídicos en versiones apt
 
 **Versión actual: v1.5** ([changelog](CHANGELOG.md))
 
-> **Compatible con [Agent Plugins 1.0.0](https://agent-plugins.org/specification)** — el
-> formato portátil de empaquetado de la Agentic AI Foundation (OpenAI, Amazon, Microsoft,
-> Cursor y Vercel, con Google como *core maintainer*). El paquete lleva el manifiesto
-> portable `plugin.json` en la raíz y el skill en
-> `skills/seudonimizador-clinico-juridico/`, así que cualquier cliente conformante lo
-> descubre.
->
-> **Funciona en ChatGPT.** El skill es texto —protocolo, criterios y plantillas, sin
-> ejecución local—, así que se instala desde **Complementos** con **Work** activado y
-> funciona igual que en Claude. Su
-> frontmatter valida contra el conjunto cerrado de
-> [Agent Skills](https://agentskills.io/specification), que es lo que ChatGPT, claude.ai
-> y la Skills API exigen para aceptar la subida: una clave de más ahí no se ignora,
-> falla con error duro. Están también en el **plan gratuito**, con límites de uso.
-
 > **No anonimiza en sentido fuerte.** Produce textos seudonimizados con generalización dirigida, marcando explícitamente el riesgo residual. No sustituye los procedimientos formales de anonimización exigidos por el RGPD/LOPDGDD para publicación científica, peritaje formal, expediente oficial ni cesión a terceros.
+
+**En esta página:**
+[Cómo empezar](#cómo-empezar) · [Qué hace](#qué-hace) · [Modos](#modos) · [Idioma](#idioma-de-la-respuesta) · [Instalación](#instalación) · [Modo recomendado de uso](#modo-recomendado-de-uso) · [Para qué NO sirve](#para-qué-no-sirve) · [Documentación](#documentación) · [Limitaciones](#limitaciones-conocidas) · [Licencia](#licencia)
+
+## Cómo empezar
+
+1. **Instala el skill** donde vayas a usarlo; elige tu opción en [Instalación](#instalación).
+2. **Abre una conversación temporal** antes de pegar nada sensible.
+3. **Elige el modo y pega el caso**: `/seudonimizar A` (clínico), `B` (jurídico) o `C` (generalización extrema). Para revisar un texto ya seudonimizado, `/seudonimizar audit`.
+4. **Revisa el mapa rol → token y el bloque «Control de fidelidad»** antes de aceptar el resultado.
+5. **Guarda el mapa de tokens aparte** del texto transformado, o destrúyelo.
+
+Detalle de cada paso en [Modo recomendado de uso](#modo-recomendado-de-uso).
 
 ## Qué hace
 
@@ -94,17 +92,22 @@ idioma), los tokens (`[PACIENTE_A]`…), `[DATO_ELIMINADO]` y `[NO_CONSTA]`, los
 
 No hay que editar `SKILL.md`: los idiomas se descubren por los ficheros `i18n-*.md` junto a él.
 
-## Novedades v1.1 — refuerzo anti-alucinación
-
-Tras pruebas en uso real, el skill incorporaba ocasionalmente matices o inferencias no presentes en el original durante el parafraseo. Una alucinación silenciosa en este contexto es más grave que un identificador residual: contamina el razonamiento clínico o jurídico sin dejar rastro detectable. La v1.1 endurece tres puntos:
-
-- **Regla 1 transversal reescrita como prohibición estricta y prioritaria** sobre cualquier otra transformación. Si una generalización o parafraseo introdujera información nueva, se abandona la transformación antes que inventar.
-- **Nuevo marcador `[DATO_ELIMINADO]`** para eliminar un dato sin sustituirlo. Convive con `[NO_CONSTA]`, que se reserva para datos del original cuya lectura es ambigua.
-- **Bloque "Control de fidelidad"** obligatorio en la salida y **comprobación 7** en el modo `audit`.
-
-Detalle completo en [CHANGELOG.md](CHANGELOG.md).
-
 ## Instalación
+
+> **Compatible con [Agent Plugins 1.0.0](https://agent-plugins.org/specification)** — el
+> formato portátil de empaquetado de la Agentic AI Foundation (OpenAI, Amazon, Microsoft,
+> Cursor y Vercel, con Google como *core maintainer*). El paquete lleva el manifiesto
+> portable `plugin.json` en la raíz y el skill en
+> `skills/seudonimizador-clinico-juridico/`, así que cualquier cliente conformante lo
+> descubre.
+>
+> **Funciona en ChatGPT.** El skill es texto —protocolo, criterios y plantillas, sin
+> ejecución local—, así que se instala desde **Complementos** con **Work** activado y
+> funciona igual que en Claude. Su
+> frontmatter valida contra el conjunto cerrado de
+> [Agent Skills](https://agentskills.io/specification), que es lo que ChatGPT, claude.ai
+> y la Skills API exigen para aceptar la subida: una clave de más ahí no se ignora,
+> falla con error duro. Están también en el **plan gratuito**, con límites de uso.
 
 ### Opción 1 — Claude.ai (recomendada para uso conversacional)
 
@@ -292,6 +295,16 @@ estructura de [Agent Plugins 1.0.0](https://agent-plugins.org/specification).
 - El texto libre que el modelo redacta dentro del marco (justificaciones, decisiones por defecto) se genera en el momento en el idioma elegido y **no lo ha revisado nadie**; solo los literales fijos están en los catálogos.
 - El idioma solo se aplica al marco de la respuesta: el texto seudonimizado conserva el idioma del caso.
 - El mapa rol → token se entrega en la misma respuesta que el texto transformado. La separación efectiva (RGPD Art. 4.5) depende de que el usuario archive o destruya el mapa aparte.
+
+## Novedades v1.1 — refuerzo anti-alucinación
+
+Tras pruebas en uso real, el skill incorporaba ocasionalmente matices o inferencias no presentes en el original durante el parafraseo. Una alucinación silenciosa en este contexto es más grave que un identificador residual: contamina el razonamiento clínico o jurídico sin dejar rastro detectable. La v1.1 endurece tres puntos:
+
+- **Regla 1 transversal reescrita como prohibición estricta y prioritaria** sobre cualquier otra transformación. Si una generalización o parafraseo introdujera información nueva, se abandona la transformación antes que inventar.
+- **Nuevo marcador `[DATO_ELIMINADO]`** para eliminar un dato sin sustituirlo. Convive con `[NO_CONSTA]`, que se reserva para datos del original cuya lectura es ambigua.
+- **Bloque "Control de fidelidad"** obligatorio en la salida y **comprobación 7** en el modo `audit`.
+
+Detalle completo en [CHANGELOG.md](CHANGELOG.md).
 
 ## Licencia
 
